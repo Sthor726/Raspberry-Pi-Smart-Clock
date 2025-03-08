@@ -73,12 +73,12 @@ try:
                 draw.text((5, 68), event["summary"], fill = "BLACK",font=Font1)
                 draw.text((5, 118), start, fill = "WHITE",font=Font2)
                 disp.ShowImage(image1,0,0)
+                time.sleep(5)
+                disp.clear()
         else:
             logging.info("No upcoming events found.")
             draw.text((5, 68), "No upcoming events found.", fill = "BLACK",font=Font1)
             disp.ShowImage(image1,0,0)
-            
-        time.sleep(5)
         
     
 except IOError as e:
