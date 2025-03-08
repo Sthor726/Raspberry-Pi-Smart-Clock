@@ -11,7 +11,7 @@ from googleapiclient.errors import HttpError
 SCOPES = ["https://www.googleapis.com/auth/calendar.readonly"]
 
 
-def main():
+def getCalendarEvents(numberOfEvents):
   creds = None
   # The file token.json stores the user's access and refresh tokens, and is
   # created automatically when the authorization flow completes for the first
@@ -36,13 +36,13 @@ def main():
 
     # Call the Calendar API
     now = datetime.datetime.utcnow().isoformat() + "Z"  # 'Z' indicates UTC time
-    print("Getting the upcoming 10 events")
+    print("Getting the upcoming events")
     events_result = (
         service.events()
         .list(
             calendarId="primary",
             timeMin=now,
-            maxResults=3,
+            maxResults=numberOfEvents,
             singleEvents=True,
             orderBy="startTime",
         )
@@ -53,6 +53,7 @@ def main():
     if not events:
       print("No upcoming events found.")
       return
+    return events
 
     # Prints the start and name of the next 10 events
     for event in events:
@@ -63,5 +64,3 @@ def main():
     print(f"An error occurred: {error}")
 
 
-if __name__ == "__main__":
-  main()
