@@ -8,6 +8,7 @@ import spidev as SPI
 from PIL import Image, ImageDraw, ImageFont
 from lib import LCD_2inch
 import clock
+from datetime import datetime, timedelta
 
 RST = 27
 DC = 25
@@ -16,46 +17,49 @@ bus = 0
 device = 0
 logging.basicConfig(level=logging.DEBUG)
 
+# Color definitions
+BACKGROUND_COLOR = (0, 0, 0)  # Black background
+TEXT_COLOR = (0, 255, 0)  # Green text
+
 try:
     disp = LCD_2inch.LCD_2inch()
     disp.Init()
     disp.clear()
 
-    image1 = Image.new("RGB", (disp.height, disp.width), "WHITE")
+    image1 = Image.new("RGB", (disp.height, disp.width), BACKGROUND_COLOR)
     draw = ImageDraw.Draw(image1)
 
     Font1 = ImageFont.truetype("Font/Font00.ttf", 18)
     Font2 = ImageFont.truetype("Font/Font01.ttf", 22)
 
     while True:
-        events = clock.getCalendarEvents(5)
-        draw.rectangle([(0, 0), (disp.height, disp.width)], fill="WHITE")
+        now = datetime.now()
+        current_time = now.strftime("%I:%M %p")
+        day_of_week = now.strftime("%A")
+        
+        events = clock.getCalendarEvents(1)
+        draw.rectangle([(0, 0), (disp.height, disp.width)], fill=BACKGROUND_COLOR)
+
+        draw.text((10, 10), f"Time: {current_time}", fill=TEXT_COLOR, font=Font2)
+        draw.text((10, 30), f"Day: {day_of_week}", fill=TEXT_COLOR, font=Font2)
 
         if events:
-            y_position = 10
-            for i, event in enumerate(events[:2]):
-                start_time = event["start"]
-                summary = event["summary"]
+            next_event = events[0]
+            event_start = next_event["start"]
+            event_summary = next_event["summary"]
 
-                draw.text((10, y_position), f"Start: {start_time}", fill="BLACK", font=Font1)
-                y_position += 25
+            event_date = event_start.strftime("%m/%d")
+            event_start_time = event_start.strftime("%I:%M %p")
+            event_end_time = event_start + timedelta(hours=1)
+            event_end_time_str = event_end_time.strftime("%I:%M %p")
 
-                draw.text((10, y_position), summary, fill="BLACK", font=Font2)
-                y_position += 40
-
-                if i < 1:
-                    draw.line([(10, y_position), (disp.height-10, y_position)], fill="BLACK", width=1)
-                    y_position += 10
-
-            if len(events) > 2:
-                draw.text((10, y_position), "More events available...", fill="BLACK", font=Font1)
-
-            disp.ShowImage(image1, 0, 0)
+            event_text = f"{event_date} {event_start_time}-{event_end_time_str}\n\"{event_summary}\""
+            draw.text((10, 60), event_text, fill=TEXT_COLOR, font=Font2)
+        
         else:
-            logging.info("No upcoming events found.")
-            draw.text((10, 20), "No upcoming events found.", fill="BLACK", font=Font2)
-            disp.ShowImage(image1, 0, 0)
+            draw.text((10, 60), "No upcoming events.", fill=TEXT_COLOR, font=Font2)
 
+        disp.ShowImage(image1, 0, 0)
         time.sleep(5)
 
 except IOError as e:
