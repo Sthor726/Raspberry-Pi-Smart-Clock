@@ -28,8 +28,8 @@ try:
     image1 = Image.new("RGB", (disp.height, disp.width), BACKGROUND_COLOR)
     draw = ImageDraw.Draw(image1)
 
-    Font1 = ImageFont.truetype("Font/Font00.ttf", 18)
-    Font2 = ImageFont.truetype("Font/Font01.ttf", 22)
+    Font1 = ImageFont.truetype("Font/Font00.ttf", 24)
+    Font2 = ImageFont.truetype("Font/Font00.ttf", 20)
 
     while True:
         now = datetime.now()
@@ -39,8 +39,8 @@ try:
         events = clock.getCalendarEvents(1)
         draw.rectangle([(0, 0), (disp.height, disp.width)], fill=BACKGROUND_COLOR)
 
-        draw.text((10, 10), f"Time: {current_time}", fill=TEXT_COLOR, font=Font1)
-        draw.text((10, 30), f"Day: {day_of_week}", fill=TEXT_COLOR, font=Font1)
+        draw.text((10, 10), f"{current_time}", fill=TEXT_COLOR, font=Font1)
+        draw.text((10, 30), f"{day_of_week}", fill=TEXT_COLOR, font=Font1)
 
         if events:
             next_event = events[0]
@@ -61,8 +61,10 @@ try:
                 event_end_time = event_start + timedelta(hours=1)
                 event_end_time_str = event_end_time.strftime("%I:%M %p")
 
-                event_text = f"{event_date} {event_start_time}-{event_end_time_str}\n\"{event_summary}\""
-                draw.text((10, 60), event_text, fill=TEXT_COLOR, font=Font2)
+                event_text = f"{event_date} {event_start_time} - {event_end_time_str}\n{event_summary}"
+                
+                draw.text((10, 70), "Next:", fill=TEXT_COLOR, font=Font2)
+                draw.text((10, 100), event_text, fill=TEXT_COLOR, font=Font2)
             else:
                 draw.text((10, 60), "Invalid event time", fill=TEXT_COLOR, font=Font2)
         
