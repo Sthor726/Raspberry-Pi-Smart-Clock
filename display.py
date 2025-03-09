@@ -56,10 +56,8 @@ try:
     # logging.info("draw text")
     #Font1 = ImageFont.truetype("/home/sthor726/Raspberry-Pi-Smart-Clock/Font/Font00.ttf",25)
     #Font2 = ImageFont.truetype("/home/sthor726/Raspberry-Pi-Smart-Clock/Font/Font01.ttf",35)
-    #Font3 = ImageFont.truetype("/home/sthor726/Raspberry-Pi-Smart-Clock/Font/Font02.ttf",32)
-    font_path = "/home/sthor726/Raspberry-Pi-Smart-Clock/Font/Font00.ttf"  # Absolute path
-    Font1 = ImageFont.truetype(font_path, 24)  # Set font size
-    print(Font1)
+    #Font3 = ImageFont.truetype("/home/sthor726/Raspberry-Pi-Smart-Clock/Font/Font02.ttf",32) # Absolute path
+    Font1 = ImageFont.truetype("Font01.ttf", 25)  # Set font size
 
     # draw.rectangle([(0,65),(140,100)],fill = "WHITE")
     # draw.text((5, 68), 'Hello world', fill = "BLACK",font=Font1)
