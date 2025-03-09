@@ -8,7 +8,7 @@ import time
 import logging
 import spidev as SPI
 sys.path.append("..")
-from ..lib import LCD_2inch
+from lib import LCD_2inch
 from PIL import Image,ImageDraw,ImageFont
 
 # Raspberry Pi pin configuration:
@@ -31,7 +31,7 @@ try:
     # Create blank image for drawing.
     image1 = Image.new("RGB", (disp.height, disp.width ), "WHITE")
     draw = ImageDraw.Draw(image1)
-
+    
     # logging.info("draw point")
 
     # draw.rectangle((5,10,6,11), fill = "BLACK")
@@ -54,9 +54,12 @@ try:
     # draw.ellipse((150,65,190,105), fill = (0,255,0))
 
     # logging.info("draw text")
-    # Font1 = ImageFont.truetype("../Font/Font01.ttf",25)
-    # Font2 = ImageFont.truetype("../Font/Font01.ttf",35)
-    # Font3 = ImageFont.truetype("../Font/Font02.ttf",32)
+    #Font1 = ImageFont.truetype("/home/sthor726/Raspberry-Pi-Smart-Clock/Font/Font00.ttf",25)
+    #Font2 = ImageFont.truetype("/home/sthor726/Raspberry-Pi-Smart-Clock/Font/Font01.ttf",35)
+    #Font3 = ImageFont.truetype("/home/sthor726/Raspberry-Pi-Smart-Clock/Font/Font02.ttf",32)
+    font_path = "/home/sthor726/Raspberry-Pi-Smart-Clock/Font/Font00.ttf"  # Absolute path
+    Font1 = ImageFont.truetype(font_path, 24)  # Set font size
+    print(Font1)
 
     # draw.rectangle([(0,65),(140,100)],fill = "WHITE")
     # draw.text((5, 68), 'Hello world', fill = "BLACK",font=Font1)
@@ -67,11 +70,8 @@ try:
         events = clock.getCalendarEvents(5)
         if events:
             for event in events:
-                start = event["start"].get("dateTime", event["start"].get("date"))
-                logging.info(start)
-                logging.info(event["summary"])
-                draw.text((5, 68), event["summary"], fill = "BLACK",font=Font1)
-                draw.text((5, 118), start, fill = "WHITE",font=Font2)
+                logging.info(event)
+                draw.text((5, 68), event, fill = "BLACK",font=Font1)
                 disp.ShowImage(image1,0,0)
                 time.sleep(5)
                 disp.clear()
