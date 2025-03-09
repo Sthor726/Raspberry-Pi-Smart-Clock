@@ -1,5 +1,4 @@
-# Raspberry Pi Zero Google Calendar Display
-**IN DEVELOPMENT**
+# Raspberry Pi Zero Smart Clock
 
 ## Overview
 This project turns a Raspberry Pi Zero into a smart clock with Google Calendar display. 
