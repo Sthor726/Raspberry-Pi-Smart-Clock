@@ -1,66 +1,57 @@
 import datetime
-import os.path
-
-from google.auth.transport.requests import Request
-from google.oauth2.credentials import Credentials
-from google_auth_oauthlib.flow import InstalledAppFlow
+from google.oauth2 import service_account
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 
-# If modifying these scopes, delete the file token.json.
 SCOPES = ["https://www.googleapis.com/auth/calendar.readonly"]
 
+SERVICE_ACCOUNT_FILE = "service_account_credentials.json"
 
-def getCalendarEvents(numberOfEvents):
-  creds = None
-  # The file token.json stores the user's access and refresh tokens, and is
-  # created automatically when the authorization flow completes for the first
-  # time.
-  if os.path.exists("token.json"):
-    creds = Credentials.from_authorized_user_file("token.json", SCOPES)
-  # If there are no (valid) credentials available, let the user log in.
-  if not creds or not creds.valid:
-    if creds and creds.expired and creds.refresh_token:
-      creds.refresh(Request())
-    else:
-      flow = InstalledAppFlow.from_client_secrets_file(
-          "credentials.json", SCOPES
-      )
-      creds = flow.run_local_server(port=0)
-    # Save the credentials for the next run
-    with open("token.json", "w") as token:
-      token.write(creds.to_json())
+CALENDAR_ID = "sthor726@gmail.com"  
 
-  try:
-    service = build("calendar", "v3", credentials=creds)
-
-    # Call the Calendar API
-    now = datetime.datetime.utcnow().isoformat() + "Z"  # 'Z' indicates UTC time
-    print("Getting the upcoming events")
-    events_result = (
-        service.events()
-        .list(
-            calendarId="primary",
-            timeMin=now,
-            maxResults=numberOfEvents,
-            singleEvents=True,
-            orderBy="startTime",
+def getCalendarEvents(number_of_events=5):
+    try:
+        credentials = service_account.Credentials.from_service_account_file(
+            SERVICE_ACCOUNT_FILE, scopes=SCOPES
         )
-        .execute()
-    )
-    events = events_result.get("items", [])
 
-    if not events:
-      print("No upcoming events found.")
-      return
-    return events
+        service = build("calendar", "v3", credentials=credentials)
 
-    # Prints the start and name of the next 10 events
-    for event in events:
-      start = event["start"].get("dateTime", event["start"].get("date"))
-      print(start, event["summary"])
+        now = datetime.datetime.utcnow().isoformat() + "Z"
 
-  except HttpError as error:
-    print(f"An error occurred: {error}")
+        print("Fetching the nearest upcoming events...")
 
+        
+        events_result = (
+            service.events()
+            .list(
+                calendarId=CALENDAR_ID,
+                timeMin=now, 
+                maxResults=number_of_events,
+                singleEvents=True,
+                orderBy="startTime",
+            )
+            .execute()
+        )
 
+        events = events_result.get("items", [])
+
+        if not events:
+            print("No upcoming events found.")
+            return []
+
+        nearest_events = []
+        for event in events:
+            start = event["start"].get("dateTime", event["start"].get("date"))
+            nearest_events.append({"start": start, "summary": event["summary"]})
+
+        return nearest_events
+
+    except HttpError as error:
+        print(f"An error occurred: {error}")
+        return []
+
+if __name__ == "__main__":
+    upcoming_events = getCalendarEvents(5)
+    for event in upcoming_events:
+        print(f"{event['start']} - {event['summary']}")
