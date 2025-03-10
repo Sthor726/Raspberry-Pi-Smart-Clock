@@ -28,8 +28,8 @@ try:
     image1 = Image.new("RGB", (disp.height, disp.width), BACKGROUND_COLOR)
     draw = ImageDraw.Draw(image1)
 
-    Font1 = ImageFont.truetype("Font/Font00.ttf", 24)
-    Font2 = ImageFont.truetype("Font/Font00.ttf", 20)
+    Font1 = ImageFont.truetype("/home/sthor726/Raspberry-Pi-Smart-Clock/Font/Font00.ttf", 24)
+    Font2 = ImageFont.truetype("/home/sthor726/Raspberry-Pi-Smart-Clock/Font/Font00.ttf", 20)
 
     while True:
         now = datetime.now()

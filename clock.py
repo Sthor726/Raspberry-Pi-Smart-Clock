@@ -5,7 +5,7 @@ from googleapiclient.errors import HttpError
 
 SCOPES = ["https://www.googleapis.com/auth/calendar.readonly"]
 
-SERVICE_ACCOUNT_FILE = "service_account_credentials.json"
+SERVICE_ACCOUNT_FILE = "/home/sthor726/Raspberry-Pi-Smart-Clock/service_account_credentials.json"
 
 CALENDAR_ID = "sthor726@gmail.com"  
 
