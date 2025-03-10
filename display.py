@@ -17,8 +17,8 @@ bus = 0
 device = 0
 logging.basicConfig(level=logging.DEBUG)
 
-BACKGROUND_COLOR = (166, 166, 154)  
-TEXT_COLOR = (0, 0, 0)  
+BACKGROUND_COLOR = (0, 0, 0)  
+TEXT_COLOR = (0, 255, 0)  
 
 try:
     disp = LCD_2inch.LCD_2inch()
@@ -28,7 +28,9 @@ try:
     image1 = Image.new("RGB", (disp.height, disp.width), BACKGROUND_COLOR)
     draw = ImageDraw.Draw(image1)
 
-    Font1 = ImageFont.truetype("/home/sthor726/Raspberry-Pi-Smart-Clock/Font/sysfont.otf", 24)
+    FontLarge = ImageFont.truetype("/home/sthor726/Raspberry-Pi-Smart-Clock/Font/sysfont.otf", 40)
+    FontMedium = ImageFont.truetype("/home/sthor726/Raspberry-Pi-Smart-Clock/Font/sysfont.otf", 30)
+    FontSmall = ImageFont.truetype("/home/sthor726/Raspberry-Pi-Smart-Clock/Font/sysfont.otf", 24)
 
     while True:
         now = datetime.now()
@@ -38,12 +40,12 @@ try:
         events = clock.getCalendarEvents(2)
         draw.rectangle([(0, 0), (disp.height, disp.width)], fill=BACKGROUND_COLOR)
 
-        draw.text((10, 10), f"{current_time}", fill=TEXT_COLOR, font=Font1)
-        draw.text((10, 30), f"{day_of_week}", fill=TEXT_COLOR, font=Font1)
+        draw.text((10, 10), current_time, fill=TEXT_COLOR, font=FontLarge)
+        draw.text((10, 60), day_of_week, fill=TEXT_COLOR, font=FontLarge)
 
+        y_offset = 120
         if events:
-            y_offset = 100
-            for i, event in enumerate(events[:2]):
+            for event in events[:2]:
                 event_start = event["start"]
                 event_summary = event["summary"]
 
@@ -60,16 +62,16 @@ try:
                     event_end_time = event_start + timedelta(hours=1)
                     event_end_time_str = event_end_time.strftime("%I:%M %p")
 
-                    event_text = f"{event_date} {event_start_time} - {event_end_time_str} \n {event_summary}"
-                    draw.text((10, y_offset), event_text, fill=TEXT_COLOR, font=Font1)
-                    y_offset += 70
+                    event_text = f"{event_date} {event_start_time} - {event_end_time_str}"
+                    draw.text((10, y_offset), event_text, fill=TEXT_COLOR, font=FontMedium)
+                    draw.text((10, y_offset + 35), event_summary, fill=TEXT_COLOR, font=FontSmall)
+                    y_offset += 80
                 
                 else:
-                    draw.text((10, y_offset), "Invalid event time", fill=TEXT_COLOR, font=Font1)
-                    y_offset += 70
-
+                    draw.text((10, y_offset), "Invalid event time", fill=TEXT_COLOR, font=FontMedium)
+                    y_offset += 50
         else:
-            draw.text((10, 60), "No upcoming events.", fill=TEXT_COLOR, font=Font1)
+            draw.text((10, y_offset), "No upcoming events.", fill=TEXT_COLOR, font=FontMedium)
 
         disp.ShowImage(image1, 0, 0)
         time.sleep(5)
