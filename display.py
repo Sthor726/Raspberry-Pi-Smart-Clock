@@ -28,44 +28,46 @@ try:
     image1 = Image.new("RGB", (disp.height, disp.width), BACKGROUND_COLOR)
     draw = ImageDraw.Draw(image1)
 
-    Font1 = ImageFont.truetype("/home/sthor726/Raspberry-Pi-Smart-Clock/Font/sysfont.otf", 20)
+    Font1 = ImageFont.truetype("/home/sthor726/Raspberry-Pi-Smart-Clock/Font/sysfont.otf", 24)
 
     while True:
         now = datetime.now()
         current_time = now.strftime("%I:%M %p")
         day_of_week = now.strftime("%A")
         
-        events = clock.getCalendarEvents(1)
+        events = clock.getCalendarEvents(2)
         draw.rectangle([(0, 0), (disp.height, disp.width)], fill=BACKGROUND_COLOR)
 
         draw.text((10, 10), f"{current_time}", fill=TEXT_COLOR, font=Font1)
         draw.text((10, 30), f"{day_of_week}", fill=TEXT_COLOR, font=Font1)
 
         if events:
-            next_event = events[0]
-            event_start = next_event["start"]
-            event_summary = next_event["summary"]
+            y_offset = 60
+            for i, event in enumerate(events[:2]):
+                event_start = event["start"]
+                event_summary = event["summary"]
 
-            # Ensure event_start is a datetime object, else try to parse it.
-            if isinstance(event_start, str):
-                try:
-                    event_start = datetime.fromisoformat(event_start)  # Try to parse as ISO format
-                except ValueError:
-                    logging.error(f"Invalid event start format: {event_start}")
-                    event_start = None
+                if isinstance(event_start, str):
+                    try:
+                        event_start = datetime.fromisoformat(event_start)
+                    except ValueError:
+                        logging.error(f"Invalid event start format: {event_start}")
+                        event_start = None
 
-            if event_start:
-                event_date = event_start.strftime("%m/%d")
-                event_start_time = event_start.strftime("%I:%M %p")
-                event_end_time = event_start + timedelta(hours=1)
-                event_end_time_str = event_end_time.strftime("%I:%M %p")
+                if event_start:
+                    event_date = event_start.strftime("%m/%d")
+                    event_start_time = event_start.strftime("%I:%M %p")
+                    event_end_time = event_start + timedelta(hours=1)
+                    event_end_time_str = event_end_time.strftime("%I:%M %p")
 
-                event_text = f"{event_date} {event_start_time} - {event_end_time_str} {event_summary}"
+                    event_text = f"{event_date} {event_start_time} - {event_end_time_str} \n {event_summary}"
+                    draw.text((10, y_offset), event_text, fill=TEXT_COLOR, font=Font1)
+                    y_offset += 40
                 
-                draw.text((10, 100), event_text, fill=TEXT_COLOR, font=Font1)
-            else:
-                draw.text((10, 60), "Invalid event time", fill=TEXT_COLOR, font=Font1)
-        
+                else:
+                    draw.text((10, y_offset), "Invalid event time", fill=TEXT_COLOR, font=Font1)
+                    y_offset += 40
+
         else:
             draw.text((10, 60), "No upcoming events.", fill=TEXT_COLOR, font=Font1)
 
