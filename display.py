@@ -62,11 +62,11 @@ try:
 
                     event_text = f"{event_date} {event_start_time} - {event_end_time_str} \n {event_summary}"
                     draw.text((10, y_offset), event_text, fill=TEXT_COLOR, font=Font1)
-                    y_offset += 40
+                    y_offset += 70
                 
                 else:
                     draw.text((10, y_offset), "Invalid event time", fill=TEXT_COLOR, font=Font1)
-                    y_offset += 40
+                    y_offset += 70
 
         else:
             draw.text((10, 60), "No upcoming events.", fill=TEXT_COLOR, font=Font1)
