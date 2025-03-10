@@ -17,8 +17,8 @@ bus = 0
 device = 0
 logging.basicConfig(level=logging.DEBUG)
 
-BACKGROUND_COLOR = (0, 0, 0)  
-TEXT_COLOR = (0, 255, 0)  
+BACKGROUND_COLOR = (166, 166, 154)  
+TEXT_COLOR = (0, 0, 0)  
 
 try:
     disp = LCD_2inch.LCD_2inch()
@@ -42,7 +42,7 @@ try:
         draw.text((10, 30), f"{day_of_week}", fill=TEXT_COLOR, font=Font1)
 
         if events:
-            y_offset = 60
+            y_offset = 100
             for i, event in enumerate(events[:2]):
                 event_start = event["start"]
                 event_summary = event["summary"]
