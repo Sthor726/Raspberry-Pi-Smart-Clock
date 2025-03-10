@@ -28,8 +28,7 @@ try:
     image1 = Image.new("RGB", (disp.height, disp.width), BACKGROUND_COLOR)
     draw = ImageDraw.Draw(image1)
 
-    Font1 = ImageFont.truetype("/home/sthor726/Raspberry-Pi-Smart-Clock/Font/Font00.ttf", 24)
-    Font2 = ImageFont.truetype("/home/sthor726/Raspberry-Pi-Smart-Clock/Font/Font00.ttf", 20)
+    Font1 = ImageFont.truetype("/home/sthor726/Raspberry-Pi-Smart-Clock/Font/sysfont.otf", 20)
 
     while True:
         now = datetime.now()
@@ -61,15 +60,14 @@ try:
                 event_end_time = event_start + timedelta(hours=1)
                 event_end_time_str = event_end_time.strftime("%I:%M %p")
 
-                event_text = f"{event_date} {event_start_time} - {event_end_time_str}\n{event_summary}"
+                event_text = f"{event_date} {event_start_time} - {event_end_time_str} {event_summary}"
                 
-                draw.text((10, 70), "Next:", fill=TEXT_COLOR, font=Font2)
-                draw.text((10, 100), event_text, fill=TEXT_COLOR, font=Font2)
+                draw.text((10, 100), event_text, fill=TEXT_COLOR, font=Font1)
             else:
-                draw.text((10, 60), "Invalid event time", fill=TEXT_COLOR, font=Font2)
+                draw.text((10, 60), "Invalid event time", fill=TEXT_COLOR, font=Font1)
         
         else:
-            draw.text((10, 60), "No upcoming events.", fill=TEXT_COLOR, font=Font2)
+            draw.text((10, 60), "No upcoming events.", fill=TEXT_COLOR, font=Font1)
 
         disp.ShowImage(image1, 0, 0)
         time.sleep(5)
