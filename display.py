@@ -18,7 +18,7 @@ device = 0
 logging.basicConfig(level=logging.DEBUG)
 
 BACKGROUND_COLOR = (166, 166, 154)  
-TEXT_COLOR = (0, 0, 0)  
+TEXT_COLOR = (20, 20, 20)  
 
 try:
     disp = LCD_2inch.LCD_2inch()
@@ -28,7 +28,7 @@ try:
     background = Image.open("wii-menu.png").convert("RGB")
     background = background.resize((disp.height, disp.width))
 
-    Font1 = ImageFont.truetype("/home/sthor726/Raspberry-Pi-Smart-Clock/Font/contm.ttf", 24)
+    Font1 = ImageFont.truetype("/home/sthor726/Raspberry-Pi-Smart-Clock/Font/sysfont.otf", 24)
     FontLarge = ImageFont.truetype("/home/sthor726/Raspberry-Pi-Smart-Clock/Font/contm.ttf", 32)
 
     while True:
@@ -52,7 +52,7 @@ try:
         day_x = (disp_width - day_text_width) // 2
 
         draw.text((time_x, 10), current_time, fill=TEXT_COLOR, font=FontLarge)
-        draw.text((day_x, 30), day_of_week, fill=TEXT_COLOR, font=FontLarge)
+        draw.text((day_x, 40), day_of_week, fill=TEXT_COLOR, font=FontLarge)
 
         if events:
             y_offset = 80
