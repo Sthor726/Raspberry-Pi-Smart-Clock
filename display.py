@@ -55,7 +55,6 @@ try:
         draw.text((time_x, 10), current_time, fill=TEXT_COLOR, font=FontLarge)
         draw.text((day_x, 40), day_of_week, fill=TEXT_COLOR, font=FontLarge)
 
-        draw.line((10, 50, disp_width - 10, 50), fill=TITLE_COLOR, width=2)
 
         if events:
             y_offset = 100
