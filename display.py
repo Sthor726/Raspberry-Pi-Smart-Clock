@@ -18,7 +18,7 @@ device = 0
 logging.basicConfig(level=logging.DEBUG)
 
 BACKGROUND_COLOR = (166, 166, 154)  
-TITLE_COLOR = (100, 100, 100)  
+TITLE_COLOR = (140, 140, 140)  
 TEXT_COLOR = (20, 20, 20)
 
 try:
@@ -26,7 +26,7 @@ try:
     disp.Init()
     disp.clear()
 
-    background = Image.open("wii-menu.png").convert("RGB")
+    background = Image.open("/home/sthor726/Raspberry-Pi-Smart-Clock/wii-menu.png").convert("RGB")
     background = background.resize((disp.height, disp.width))
 
     Font1 = ImageFont.truetype("/home/sthor726/Raspberry-Pi-Smart-Clock/Font/sysfont.otf", 24)
@@ -52,8 +52,8 @@ try:
         time_x = (disp_width - time_text_width) // 2
         day_x = (disp_width - day_text_width) // 2
 
-        draw.text((time_x, 10), current_time, fill=TEXT_COLOR, font=FontLarge)
-        draw.text((day_x, 40), day_of_week, fill=TEXT_COLOR, font=FontLarge)
+        draw.text((time_x, 10), current_time, fill=TITLE_COLOR, font=FontLarge)
+        draw.text((day_x, 40), day_of_week, fill=TITLE_COLOR, font=FontLarge)
 
 
         if events:
