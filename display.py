@@ -36,7 +36,8 @@ try:
         day_of_week = now.strftime("%A")
         
         events = clock.getCalendarEvents(2)
-        draw.rectangle([(0, 0), (disp.height, disp.width)], fill=BACKGROUND_COLOR)
+        image1 = background.copy()
+        draw = ImageDraw.Draw(image1)
 
         draw.text((10, 10), f"{current_time}", fill=TEXT_COLOR, font=Font1)
         draw.text((10, 30), f"{day_of_week}", fill=TEXT_COLOR, font=Font1)
