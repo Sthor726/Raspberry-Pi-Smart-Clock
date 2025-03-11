@@ -25,8 +25,8 @@ try:
     disp.Init()
     disp.clear()
 
-    image1 = Image.new("RGB", (disp.height, disp.width), BACKGROUND_COLOR)
-    draw = ImageDraw.Draw(image1)
+    background = Image.open("wii-menu.png").convert("RGB")
+    background = background.resize((disp.height, disp.width))
 
     Font1 = ImageFont.truetype("/home/sthor726/Raspberry-Pi-Smart-Clock/Font/sysfont.otf", 24)
 
