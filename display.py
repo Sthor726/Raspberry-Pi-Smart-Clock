@@ -28,7 +28,8 @@ try:
     background = Image.open("wii-menu.png").convert("RGB")
     background = background.resize((disp.height, disp.width))
 
-    Font1 = ImageFont.truetype("/home/sthor726/Raspberry-Pi-Smart-Clock/Font/sysfont.otf", 24)
+    Font1 = ImageFont.truetype("/home/sthor726/Raspberry-Pi-Smart-Clock/Font/contm.ttf", 24)
+    FontLarge = ImageFont.truetype("/home/sthor726/Raspberry-Pi-Smart-Clock/Font/contm.ttf", 32)
 
     while True:
         now = datetime.now()
@@ -39,11 +40,22 @@ try:
         image1 = background.copy()
         draw = ImageDraw.Draw(image1)
 
-        draw.text((10, 10), f"{current_time}", fill=TEXT_COLOR, font=Font1)
-        draw.text((10, 30), f"{day_of_week}", fill=TEXT_COLOR, font=Font1)
+        disp_width, disp_height = disp.height, disp.width  # LCD is rotated, so height is width
+
+        time_bbox = FontLarge.getbbox(current_time)
+        day_bbox = FontLarge.getbbox(day_of_week)
+
+        time_text_width = time_bbox[2] - time_bbox[0]
+        day_text_width = day_bbox[2] - day_bbox[0]
+
+        time_x = (disp_width - time_text_width) // 2
+        day_x = (disp_width - day_text_width) // 2
+
+        draw.text((time_x, 10), current_time, fill=TEXT_COLOR, font=FontLarge)
+        draw.text((day_x, 30), day_of_week, fill=TEXT_COLOR, font=FontLarge)
 
         if events:
-            y_offset = 100
+            y_offset = 80
             for i, event in enumerate(events[:2]):
                 event_start = event["start"]
                 event_summary = event["summary"]
