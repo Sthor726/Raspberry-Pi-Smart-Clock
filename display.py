@@ -29,7 +29,7 @@ try:
     background = Image.open("/home/sthor726/Raspberry-Pi-Smart-Clock/wii-menu.png").convert("RGB")
     background = background.resize((disp.height, disp.width))
     
-    crt_filter = Image.open("/home/sthor726/Raspberry-Pi-Smart-Clock/filter.png").convert("RGB")
+    crt_filter = Image.open("/home/sthor726/Raspberry-Pi-Smart-Clock/filter.png").convert("RGBA")
     crt_filter = crt_filter.resize((disp.height, disp.width))
 
     Font1 = ImageFont.truetype("/home/sthor726/Raspberry-Pi-Smart-Clock/Font/sysfont.otf", 24)
@@ -91,11 +91,9 @@ try:
 
         else:
             draw.text((10, 60), "No upcoming events.", fill=TEXT_COLOR, font=Font1)
-        
-        fil = crt_filter.copy()
-        draw = ImageDraw.Draw(fil)
+            
+        image1.paste(crt_filter, (0, 0), crt_filter)
         disp.ShowImage(image1, 0, 0)
-        disp.ShowImage(fil, 0, 0)
         time.sleep(5)
 
 except IOError as e:
