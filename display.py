@@ -18,7 +18,8 @@ device = 0
 logging.basicConfig(level=logging.DEBUG)
 
 BACKGROUND_COLOR = (166, 166, 154)  
-TEXT_COLOR = (20, 20, 20)  
+TITLE_COLOR = (100, 100, 100)  
+TEXT_COLOR = (20, 20, 20)
 
 try:
     disp = LCD_2inch.LCD_2inch()
@@ -54,8 +55,10 @@ try:
         draw.text((time_x, 10), current_time, fill=TEXT_COLOR, font=FontLarge)
         draw.text((day_x, 40), day_of_week, fill=TEXT_COLOR, font=FontLarge)
 
+        draw.line((10, 50, disp_width - 10, y_offset), fill=TITLE_COLOR, width=2)
+
         if events:
-            y_offset = 80
+            y_offset = 100
             for i, event in enumerate(events[:2]):
                 event_start = event["start"]
                 event_summary = event["summary"]
@@ -75,11 +78,14 @@ try:
 
                     event_text = f"{event_date} {event_start_time} - {event_end_time_str} \n {event_summary}"
                     draw.text((10, y_offset), event_text, fill=TEXT_COLOR, font=Font1)
-                    y_offset += 70
-                
+                    y_offset += 50
+                    
+                    if i < len(events) - 1:
+                        draw.line((10, y_offset, disp_width - 10, y_offset), fill=TITLE_COLOR, width=2)
+                        y_offset += 10
                 else:
                     draw.text((10, y_offset), "Invalid event time", fill=TEXT_COLOR, font=Font1)
-                    y_offset += 70
+                    y_offset += 50
 
         else:
             draw.text((10, 60), "No upcoming events.", fill=TEXT_COLOR, font=Font1)
