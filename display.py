@@ -75,10 +75,8 @@ try:
                 if event_start:
                     event_date = event_start.strftime("%m/%d")
                     event_start_time = event_start.strftime("%I:%M %p")
-                    event_end_time = event_start + timedelta(hours=1)
-                    event_end_time_str = event_end_time.strftime("%I:%M %p")
 
-                    event_text = f"{event_date} {event_start_time} - {event_end_time_str} \n {event_summary}"
+                    event_text = f"{event_date} {event_start_time} \n {event_summary}"
                     draw.text((10, y_offset), event_text, fill=TEXT_COLOR, font=Font1)
                     y_offset += 50
                     
