@@ -1,7 +1,7 @@
 # Raspberry Pi Zero Smart Clock
 
 ## Overview
-This project leverages a Raspberry Pi and a 2-inch LCD screen to create a display that shows upcoming events from my Google Calendar. The display shows the current time, the day of the week, and details about the next scheduled event, including its time, date, and title.
+This project leverages a Raspberry Pi and a 2-inch LCD screen to create a display that shows upcoming events from my Google Calendar. The display shows the current time, the day of the week, and details about the next scheduled events, including its time, date, and title.
 
 
 ## Features
@@ -10,3 +10,9 @@ This project leverages a Raspberry Pi and a 2-inch LCD screen to create a displa
 with the Google Calendar API and retrieve event data
 - **Display Library**: The project uses the Waveshare LCD_2inch library to interface with the 2-inch display.
 The PIL (Pillow) library is used to create and manage the images displayed on the screen
+- **Casing**: The Raspberry Pi and LCD screen are housed in a 3d printed case, meant to resemble an old-fashioned TV.
+## Project Images:
+<br>
+<img src="https://github.com/user-attachments/assets/2801d600-7dbc-4c50-be7e-86a9032d6c1e" width="400">
+
+
