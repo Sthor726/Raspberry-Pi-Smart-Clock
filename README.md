@@ -12,7 +12,8 @@ with the Google Calendar API and retrieve event data
 The PIL (Pillow) library is used to create and manage the images displayed on the screen
 - **Casing**: The Raspberry Pi and LCD screen are housed in a 3d printed case, meant to resemble an old-fashioned TV.
 ## Project Images:
-<br>
-<img src="https://github.com/user-attachments/assets/2801d600-7dbc-4c50-be7e-86a9032d6c1e" width="400">
 
-
+<p float="left">
+  <img src="https://github.com/user-attachments/assets/8b152666-feb8-4e22-bd5b-d92a1ad29a7e" width="400" />
+  <img src="https://github.com/user-attachments/assets/fe7e5a38-059d-4074-b55b-d7c8e96b5f87" width="400" />
+</p>
