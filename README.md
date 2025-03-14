@@ -17,3 +17,21 @@ The PIL (Pillow) library is used to create and manage the images displayed on th
   <img src="https://github.com/user-attachments/assets/8b152666-feb8-4e22-bd5b-d92a1ad29a7e" width="400" />
   <img src="https://github.com/user-attachments/assets/fe7e5a38-059d-4074-b55b-d7c8e96b5f87" width="400" />
 </p>
+
+## Implementation  
+
+On boot, the Raspberry Pi executes the following commands from `rc.local` to activate the virtual environment and start the display script:  
+
+```bash
+source /home/<username>/venv/bin/activate  
+python3 /home/<username>/Raspberry-Pi-Smart-Clock/display.py &
+```
+
+</br>
+</br>
+</br>
+
+
+##### .json files have been removed to hide API keys
+
+
