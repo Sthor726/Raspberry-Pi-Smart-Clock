@@ -34,11 +34,14 @@ try:
 
     Font1 = ImageFont.truetype("/home/sthor726/Raspberry-Pi-Smart-Clock/Font/sysfont.otf", 24)
     FontLarge = ImageFont.truetype("/home/sthor726/Raspberry-Pi-Smart-Clock/Font/contm.ttf", 32)
+    FontMedium = ImageFont.truetype("/home/sthor726/Raspberry-Pi-Smart-Clock/Font/contm.ttf", 28)
+
 
     while True:
         now = datetime.now()
         current_time = now.strftime("%I:%M %p")
         day_of_week = now.strftime("%A")
+        today_date = now.strftime("%B %d")
         
         events = clock.getCalendarEvents(2)
         image1 = background.copy()
@@ -54,9 +57,10 @@ try:
 
         time_x = (disp_width - time_text_width) // 2
         day_x = (disp_width - day_text_width) // 2
-
+        
+        
+        draw.text((day_x, 40), today_date + " " + day_of_week, fill=TITLE_COLOR, font=FontMedium)
         draw.text((time_x, 10), current_time, fill=TITLE_COLOR, font=FontLarge)
-        draw.text((day_x, 40), day_of_week, fill=TITLE_COLOR, font=FontLarge)
 
 
         if events:
