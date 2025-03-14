@@ -60,8 +60,8 @@ try:
         day_x = (disp_width - day_text_width) // 2
         
         
-        draw.text((day_x, 40), day_of_week + ", " + today_date, fill=TITLE_COLOR, font=FontMedium)
-        draw.text((time_x, 10), current_time, fill=TITLE_COLOR, font=FontLarge)
+        draw.text((day_x, 10), day_of_week + ", " + today_date, fill=TITLE_COLOR, font=FontMedium)
+        draw.text((time_x, 40), current_time, fill=TITLE_COLOR, font=FontLarge)
 
 
         if events:
