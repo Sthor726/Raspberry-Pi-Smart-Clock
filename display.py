@@ -49,17 +49,18 @@ try:
 
         disp_width, disp_height = disp.height, disp.width  # LCD is rotated, so height is width
 
-        time_bbox = FontLarge.getbbox(current_time)
+        time_bbox = FontMedium.getbbox(current_time)
+        date_bbox = FontMedium.getbbox(today_date)
         day_bbox = FontLarge.getbbox(day_of_week)
 
-        time_text_width = time_bbox[2] - time_bbox[0]
+        time_text_width = time_bbox[2] + date_bbox[2] - time_bbox[0] - date_bbox[0]
         day_text_width = day_bbox[2] - day_bbox[0]
 
         time_x = (disp_width - time_text_width) // 2
         day_x = (disp_width - day_text_width) // 2
         
         
-        draw.text((day_x, 40), today_date + " " + day_of_week, fill=TITLE_COLOR, font=FontMedium)
+        draw.text((day_x, 40), day_of_week + ", " today_date, fill=TITLE_COLOR, font=FontMedium)
         draw.text((time_x, 10), current_time, fill=TITLE_COLOR, font=FontLarge)
 
 
