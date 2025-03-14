@@ -53,8 +53,8 @@ try:
         date_bbox = FontMedium.getbbox(today_date)
         day_bbox = FontLarge.getbbox(day_of_week)
 
-        time_text_width = time_bbox[2] + date_bbox[2] - time_bbox[0] - date_bbox[0]
-        day_text_width = day_bbox[2] - day_bbox[0]
+        time_text_width = time_bbox[2] - time_bbox[0]
+        day_text_width = day_bbox[2] + date_bbox[2] - (day_bbox[0] + date_bbox[0])
 
         time_x = (disp_width - time_text_width) // 2
         day_x = (disp_width - day_text_width) // 2
