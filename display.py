@@ -51,18 +51,21 @@ try:
         day_of_week = now.strftime("%A")
         today_date = now.strftime("%B %d")
         
+        if current_hour < 12:
+            greeting = "Good Morning!"
+        elif current_hour < 18:
+            greeting = "Good Afternoon!"
+        else:
+            greeting = "Good Evening!"
+            
         events = clock.getCalendarEvents(2)
-
-        # Create a copy of the base image to draw text on
-        image1 = base_image.copy()
-        draw = ImageDraw.Draw(image1)
 
         disp_width, disp_height = disp.height, disp.width  # LCD is rotated, so height is width
 
         time_bbox = FontMedium.getbbox(current_time)
         date_bbox = FontMedium.getbbox(today_date)
         day_bbox = FontLarge.getbbox(day_of_week)
-        greeting_bbox = FontLarge.getbbox("Good Morning!")
+        greeting_bbox = FontLarge.getbbox(greeting)
 
         time_text_width = time_bbox[2] - time_bbox[0]
         day_text_width = day_bbox[2] + date_bbox[2] - (day_bbox[0] + date_bbox[0])
@@ -72,12 +75,9 @@ try:
         time_x = (disp_width - time_text_width) // 2
         day_x = (disp_width - day_text_width) // 2
         
-        if current_hour < 12:
-            greeting = "Good Morning!"
-        elif current_hour < 18:
-            greeting = "Good Afternoon!"
-        else:
-            greeting = "Good Evening!"
+            
+        image1 = base_image.copy()
+        draw = ImageDraw.Draw(image1)    
             
         draw.text((greeting_x, 20), greeting, fill=TITLE_COLOR, font=FontLarge)
         draw.text((day_x, 100), day_of_week + ", " + today_date, fill=TITLE_COLOR, font=FontMedium)
@@ -117,7 +117,16 @@ try:
             y_offset = 100
             for i, event in enumerate(events[:2]):
                 event_start = event["start"]
-                event_details[i][2] = event["summary"]
+                
+                summary = event["summary"]
+                summary_bbox = FontLarge.getbbox(summary)
+                summary_text_width = summary_bbox[2] - summary_bbox[0]
+                #text is too large for screen width
+                if(summary_text_width > disp_width - 10):
+                    #truncate text and add '...' after
+                    summary = summary[:int((disp_width - 20) / 10)] + "..."
+                
+                event_details[i][2] = summary
 
                 try:
                     event_start = datetime.fromisoformat(event_start)
