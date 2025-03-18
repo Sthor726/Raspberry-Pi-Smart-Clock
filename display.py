@@ -125,6 +125,8 @@ try:
         
         disp.ShowImage(image1, 0, 0)
         
+        # get events while greeting page is open - save time in transitions
+        events = clock.getCalendarEvents(2)
         time.sleep(10)
         
         # Swipe transition text off screen
@@ -143,7 +145,6 @@ try:
         text_width = text_bbox[2] - text_bbox[0]
         text_x = (disp_width - text_width) // 2
 
-        events = clock.getCalendarEvents(2)
         # translate events to text 
         event_details = get_event_text(events)
         
