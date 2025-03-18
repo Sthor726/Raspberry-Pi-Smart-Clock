@@ -81,12 +81,10 @@ try:
         for offset in range(0, disp_width + 1, 10): 
             image1 = base_image.copy()  # Start with the base image
             draw = ImageDraw.Draw(image1)
-            if(offset <= greeting_x):
-                draw.text((offset, 20), greeting, fill=TITLE_COLOR, font=FontLarge)
-            if(offset <= time_x):
-                draw.text((offset, 100), day_of_week + ", " + today_date, fill=TITLE_COLOR, font=FontMedium)
-            if(offset <= day_x):
-                draw.text((offset, 130), current_time, fill=TITLE_COLOR, font=FontLarge)
+
+            draw.text((greeting_x + disp_width + 1 - offset, 20), greeting, fill=TITLE_COLOR, font=FontLarge)
+            draw.text((day_x + disp_width + 1 - offset, 100), day_of_week + ", " + today_date, fill=TITLE_COLOR, font=FontMedium)
+            draw.text((time_x + disp_width + 1 - offset, 130), current_time, fill=TITLE_COLOR, font=FontLarge)
 
             disp.ShowImage(image1, 0, 0)
             
