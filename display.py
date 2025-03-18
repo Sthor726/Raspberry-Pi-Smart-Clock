@@ -98,7 +98,7 @@ try:
             draw.text((time_x - offset, 130), current_time, fill=TITLE_COLOR, font=FontLarge)
 
             disp.ShowImage(image1, 0, 0)
-            time.sleep(0.001)  # Adjust speed of animation
+            time.sleep(0.01)  # Adjust speed of animation
 
         # State 2: Display upcoming events
         text_bbox = FontLarge.getbbox("Upcoming Events")
@@ -152,7 +152,7 @@ try:
                 y_offset += 50
 
             disp.ShowImage(image1, 0, 0)
-            time.sleep(0.001)
+            time.sleep(0.01)
 
 except IOError as e:
     if 'disp' in locals():
