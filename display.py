@@ -36,6 +36,12 @@ try:
     FontLarge = ImageFont.truetype("/home/sthor726/Raspberry-Pi-Smart-Clock/Font/contm.ttf", 32)
     FontMedium = ImageFont.truetype("/home/sthor726/Raspberry-Pi-Smart-Clock/Font/contm.ttf", 28)
 
+    disp.clear()  # Clear the screen once during initialization
+
+    # Create a base image with the background and CRT filter
+    base_image = background.copy()
+    base_image.paste(crt_filter, (0, 0), crt_filter)
+
     while True:
         # State 1: Display greeting and date / time
         now = datetime.now()
@@ -46,7 +52,9 @@ try:
         today_date = now.strftime("%B %d")
         
         events = clock.getCalendarEvents(2)
-        image1 = background.copy()
+
+        # Create a copy of the base image to draw text on
+        image1 = base_image.copy()
         draw = ImageDraw.Draw(image1)
 
         disp_width, disp_height = disp.height, disp.width  # LCD is rotated, so height is width
@@ -75,14 +83,13 @@ try:
         draw.text((day_x, 100), day_of_week + ", " + today_date, fill=TITLE_COLOR, font=FontMedium)
         draw.text((time_x, 130), current_time, fill=TITLE_COLOR, font=FontLarge)
         
-        image1.paste(crt_filter, (0, 0), crt_filter)
         disp.ShowImage(image1, 0, 0)
         
         time.sleep(10)
         
         # Swipe transition text off screen
-        for offset in range(0, disp_width + 1, 3):  # Increment by 10 pixels per frame
-            image1 = background.copy()
+        for offset in range(0, disp_width + 1, 3):  # Increment by 3 pixels per frame
+            image1 = base_image.copy()  # Start with the base image
             draw = ImageDraw.Draw(image1)
 
             # Move text to the left by decreasing x-coordinates
@@ -90,18 +97,17 @@ try:
             draw.text((day_x - offset, 100), day_of_week + ", " + today_date, fill=TITLE_COLOR, font=FontMedium)
             draw.text((time_x - offset, 130), current_time, fill=TITLE_COLOR, font=FontLarge)
 
-            # Display the updated image
-            image1.paste(crt_filter, (0, 0), crt_filter)
             disp.ShowImage(image1, 0, 0)
-            time.sleep(0.001)  # Adjust speed of animation
-
-        # Clear the screen after the animation
-        disp.clear()
+            time.sleep(0.01)  # Adjust speed of animation
 
         # State 2: Display upcoming events
         text_bbox = FontLarge.getbbox("Upcoming Events")
         text_width = text_bbox[2] - text_bbox[0]
         text_x = (disp_width - text_width) // 2
+
+        image1 = base_image.copy()  # Start with the base image
+        draw = ImageDraw.Draw(image1)
+
         draw.text((text_x, 20), "Upcoming Events", fill=TITLE_COLOR, font=FontLarge)
 
         # Initialize event details
@@ -128,15 +134,14 @@ try:
         else:
             draw.text((10, 60), "No upcoming events.", fill=TEXT_COLOR, font=Font1)
 
-        image1.paste(crt_filter, (0, 0), crt_filter)
         disp.ShowImage(image1, 0, 0)
 
         time.sleep(10)
 
         # Swipe transition text off screen
+        y_offset = 100  # Reset y_offset before the loop
         for offset in range(0, disp_width + 1, 3):
-            y_offset = 100 
-            image1 = background.copy()
+            image1 = base_image.copy()  # Start with the base image
             draw = ImageDraw.Draw(image1)
 
             draw.text((text_x - offset, 20), "Upcoming Events", fill=TITLE_COLOR, font=FontLarge)
@@ -145,9 +150,8 @@ try:
                 draw.text((10 - offset, y_offset), event_text, fill=TEXT_COLOR, font=Font1)
                 y_offset += 50
 
-            image1.paste(crt_filter, (0, 0), crt_filter)
             disp.ShowImage(image1, 0, 0)
-            time.sleep(0.001)
+            time.sleep(0.01)
 
 except IOError as e:
     if 'disp' in locals():
