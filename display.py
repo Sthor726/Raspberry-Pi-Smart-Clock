@@ -116,11 +116,6 @@ try:
         text_width = text_bbox[2] - text_bbox[0]
         text_x = (disp_width - text_width) // 2
 
-        image1 = base_image.copy() 
-        draw = ImageDraw.Draw(image1)
-
-        draw.text((text_x, 20), "Upcoming Events", fill=TITLE_COLOR, font=FontLarge)
-
         event_details = [["" for _ in range(3)] for _ in range(2)]
 
         if events:
@@ -132,9 +127,9 @@ try:
                 summary_bbox = FontLarge.getbbox(summary)
                 summary_text_width = summary_bbox[2] - summary_bbox[0]
                 #text is too large for screen width
-                if(summary_text_width > disp_width - 20):
+                if(summary_text_width > disp_width - 15):
                     #truncate text and add '...' after
-                    summary = summary[:int((disp_width - 20) / 13)] + "..."
+                    summary = summary[:int((disp_width - 15) / 13)] + "..."
                 
                 event_details[i][2] = summary
 
@@ -146,14 +141,35 @@ try:
                     logging.error(f"Invalid event start format: {event_start}")
                     event_details[i][0] = "Invalid"
                     event_details[i][1] = "Time"
+            
+        for offset in range(0, disp_width + 1, 10):
+            y_offset = 100
+            image1 = base_image.copy() 
+            draw = ImageDraw.Draw(image1)
+            if events:
+                for i in range(len(event_details)):
+                    event_text = f"{event_details[i][0]} {event_details[i][1]} \n {event_details[i][2]}"
+                    draw.text((10 + disp_width + 1 - offset, y_offset), event_text, fill=TEXT_COLOR, font=Font1)
+                    y_offset += 50
+            else:
+                draw.text((10 + disp_width + 1 - offset, 60), "No upcoming events.", fill=TEXT_COLOR, font=Font1)
+            draw.text((text_x + disp_width + 1 - offset, 20), "Upcoming Events", fill=TITLE_COLOR, font=FontLarge)
+            disp.ShowImage(image1, 0, 0)
 
+
+        y_offset = 100
+        image1 = base_image.copy() 
+        draw = ImageDraw.Draw(image1)
+        if events:
+            for i in range(len(event_details)):
                 event_text = f"{event_details[i][0]} {event_details[i][1]} \n {event_details[i][2]}"
                 draw.text((10, y_offset), event_text, fill=TEXT_COLOR, font=Font1)
                 y_offset += 50
         else:
             draw.text((10, 60), "No upcoming events.", fill=TEXT_COLOR, font=Font1)
-
+        draw.text((text_x, 20), "Upcoming Events", fill=TITLE_COLOR, font=FontLarge)
         disp.ShowImage(image1, 0, 0)
+
 
         time.sleep(10)
 
