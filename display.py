@@ -75,6 +75,21 @@ try:
         time_x = (disp_width - time_text_width) // 2
         day_x = (disp_width - day_text_width) // 2
         
+        
+        
+        # swipe from right on screen
+        for offset in range(0, disp_width + 1, 10): 
+            image1 = base_image.copy()  # Start with the base image
+            draw = ImageDraw.Draw(image1)
+            if(offset <= greeting_x):
+                draw.text((offset, 20), greeting, fill=TITLE_COLOR, font=FontLarge)
+            if(offset <= time_x):
+                draw.text((offset, 100), day_of_week + ", " + today_date, fill=TITLE_COLOR, font=FontMedium)
+            if(offset <= day_x):
+                draw.text((offset, 130), current_time, fill=TITLE_COLOR, font=FontLarge)
+
+            disp.ShowImage(image1, 0, 0)
+            
             
         image1 = base_image.copy()
         draw = ImageDraw.Draw(image1)    
@@ -88,30 +103,27 @@ try:
         time.sleep(10)
         
         # Swipe transition text off screen
-        for offset in range(0, disp_width + 1, 10):  # Increment by 3 pixels per frame
+        for offset in range(0, disp_width + 1, 10): 
             image1 = base_image.copy()  # Start with the base image
             draw = ImageDraw.Draw(image1)
 
-            # Move text to the left by decreasing x-coordinates
             draw.text((greeting_x - offset, 20), greeting, fill=TITLE_COLOR, font=FontLarge)
             draw.text((day_x - offset, 100), day_of_week + ", " + today_date, fill=TITLE_COLOR, font=FontMedium)
             draw.text((time_x - offset, 130), current_time, fill=TITLE_COLOR, font=FontLarge)
 
             disp.ShowImage(image1, 0, 0)
-            time.sleep(0.001)  # Adjust speed of animation
 
         # State 2: Display upcoming events
         text_bbox = FontLarge.getbbox("Upcoming Events")
         text_width = text_bbox[2] - text_bbox[0]
         text_x = (disp_width - text_width) // 2
 
-        image1 = base_image.copy()  # Start with the base image
+        image1 = base_image.copy() 
         draw = ImageDraw.Draw(image1)
 
         draw.text((text_x, 20), "Upcoming Events", fill=TITLE_COLOR, font=FontLarge)
 
-        # Initialize event details
-        event_details = [["" for _ in range(3)] for _ in range(2)]  # 2 rows, 3 columns
+        event_details = [["" for _ in range(3)] for _ in range(2)]
 
         if events:
             y_offset = 100
@@ -124,7 +136,7 @@ try:
                 #text is too large for screen width
                 if(summary_text_width > disp_width - 20):
                     #truncate text and add '...' after
-                    summary = summary[:int((disp_width - 30) / 15)] + "..."
+                    summary = summary[:int((disp_width - 20) / 13)] + "..."
                 
                 event_details[i][2] = summary
 
