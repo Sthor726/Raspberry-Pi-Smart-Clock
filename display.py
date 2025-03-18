@@ -21,6 +21,34 @@ BACKGROUND_COLOR = (166, 166, 154)
 TITLE_COLOR = (140, 140, 140)  
 TEXT_COLOR = (20, 20, 20)
 
+
+def get_event_text(list_events):
+    event_details = [["" for _ in range(3)] for _ in range(2)]
+
+    if list_events:
+        for i, event in enumerate(list_events[:2]):
+            event_start = event["start"]
+            
+            summary = event["summary"]
+            summary_bbox = FontLarge.getbbox(summary)
+            summary_text_width = summary_bbox[2] - summary_bbox[0]
+            #text is too large for screen width
+            if(summary_text_width > disp_width - 20):
+                #truncate text and add '...' after
+                summary = summary[:int((disp_width - 20) / 12)] + "..."
+            
+            event_details[i][2] = summary
+
+            try:
+                event_start = datetime.fromisoformat(event_start)
+                event_details[i][0] = event_start.strftime("%m/%d")
+                event_details[i][1] = event_start.strftime("%I:%M %p")
+            except ValueError:
+                logging.error(f"Invalid event start format: {event_start}")
+                event_details[i][0] = "Invalid"
+                event_details[i][1] = "Time"
+    return event_details
+
 try:
     disp = LCD_2inch.LCD_2inch()
     disp.Init()
@@ -57,8 +85,7 @@ try:
             greeting = "Good Afternoon!"
         else:
             greeting = "Good Evening!"
-            
-        events = clock.getCalendarEvents(2)
+        
 
         disp_width, disp_height = disp.height, disp.width  # LCD is rotated, so height is width
 
@@ -116,32 +143,11 @@ try:
         text_width = text_bbox[2] - text_bbox[0]
         text_x = (disp_width - text_width) // 2
 
-        event_details = [["" for _ in range(3)] for _ in range(2)]
-
-        if events:
-            y_offset = 100
-            for i, event in enumerate(events[:2]):
-                event_start = event["start"]
-                
-                summary = event["summary"]
-                summary_bbox = FontLarge.getbbox(summary)
-                summary_text_width = summary_bbox[2] - summary_bbox[0]
-                #text is too large for screen width
-                if(summary_text_width > disp_width - 15):
-                    #truncate text and add '...' after
-                    summary = summary[:int((disp_width - 15) / 13)] + "..."
-                
-                event_details[i][2] = summary
-
-                try:
-                    event_start = datetime.fromisoformat(event_start)
-                    event_details[i][0] = event_start.strftime("%m/%d")
-                    event_details[i][1] = event_start.strftime("%I:%M %p")
-                except ValueError:
-                    logging.error(f"Invalid event start format: {event_start}")
-                    event_details[i][0] = "Invalid"
-                    event_details[i][1] = "Time"
-            
+        events = clock.getCalendarEvents(2)
+        # translate events to text 
+        event_details = get_event_text(events)
+        
+        # swipe from right on screen
         for offset in range(0, disp_width + 1, 10):
             y_offset = 100
             image1 = base_image.copy() 
@@ -198,3 +204,4 @@ except KeyboardInterrupt:
         disp.module.exit()
     logging.info("quit: ")
     exit()
+
