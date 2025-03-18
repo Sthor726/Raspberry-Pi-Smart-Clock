@@ -93,7 +93,7 @@ try:
             # Display the updated image
             image1.paste(crt_filter, (0, 0), crt_filter)
             disp.ShowImage(image1, 0, 0)
-            time.sleep(0.01)  # Adjust speed of animation
+            time.sleep(0.001)  # Adjust speed of animation
 
         # Clear the screen after the animation
         disp.clear()
@@ -103,43 +103,36 @@ try:
         text_width = text_bbox[2] - text_bbox[0]
         text_x = (disp_width - text_width) // 2
         draw.text((text_x, 20), "Upcoming Events", fill=TITLE_COLOR, font=FontLarge)
-        
+
+        # Initialize event details
+        event_details = [["" for _ in range(3)] for _ in range(2)]  # 2 rows, 3 columns
+
         if events:
-            y_offset = 100  # Reset y_offset before the loop
+            y_offset = 100
             for i, event in enumerate(events[:2]):
                 event_start = event["start"]
-                event_summary = event["summary"]
+                event_details[i][2] = event["summary"]
 
-                if isinstance(event_start, str):
-                    try:
-                        event_start = datetime.fromisoformat(event_start)
-                    except ValueError:
-                        logging.error(f"Invalid event start format: {event_start}")
-                        event_start = None
+                try:
+                    event_start = datetime.fromisoformat(event_start)
+                    event_details[i][0] = event_start.strftime("%m/%d")
+                    event_details[i][1] = event_start.strftime("%I:%M %p")
+                except ValueError:
+                    logging.error(f"Invalid event start format: {event_start}")
+                    event_details[i][0] = "Invalid"
+                    event_details[i][1] = "Time"
 
-                if event_start:
-                    event_date = event_start.strftime("%m/%d")
-                    event_start_time = event_start.strftime("%I:%M %p")
-
-                    event_text = f"{event_date} {event_start_time} \n {event_summary}"
-                    draw.text((10, y_offset), event_text, fill=TEXT_COLOR, font=Font1)
-                    y_offset += 50
-                    
-                    if i < len(events) - 1:
-                        draw.line((10, y_offset, disp_width - 10, y_offset), fill=TITLE_COLOR, width=2)
-                        y_offset += 10
-                else:
-                    draw.text((10, y_offset), "Invalid event time", fill=TEXT_COLOR, font=Font1)
-                    y_offset += 50
-
+                event_text = f"{event_details[i][0]} {event_details[i][1]} \n {event_details[i][2]}"
+                draw.text((10, y_offset), event_text, fill=TEXT_COLOR, font=Font1)
+                y_offset += 50
         else:
             draw.text((10, 60), "No upcoming events.", fill=TEXT_COLOR, font=Font1)
-            
+
         image1.paste(crt_filter, (0, 0), crt_filter)
         disp.ShowImage(image1, 0, 0)
-        
+
         time.sleep(10)
-        
+
         # Swipe transition text off screen
         for offset in range(0, disp_width + 1, 3):
             y_offset = 100 
@@ -148,34 +141,13 @@ try:
 
             draw.text((text_x - offset, 20), "Upcoming Events", fill=TITLE_COLOR, font=FontLarge)
             for i, event in enumerate(events[:2]):
-                event_start = event["start"]
-                event_summary = event["summary"]
-
-                if isinstance(event_start, str):
-                    try:
-                        event_start = datetime.fromisoformat(event_start)
-                    except ValueError:
-                        logging.error(f"Invalid event start format: {event_start}")
-                        event_start = None
-
-                if event_start:
-                    event_date = event_start.strftime("%m/%d")
-                    event_start_time = event_start.strftime("%I:%M %p")
-
-                    event_text = f"{event_date} {event_start_time} \n {event_summary}"
-                    draw.text((10 - offset, y_offset), event_text, fill=TEXT_COLOR, font=Font1)
-                    y_offset += 50
-
-                    if i < len(events) - 1:
-                        draw.line((10 - offset, y_offset, disp_width - 10, y_offset), fill=TITLE_COLOR, width=2)
-                        y_offset += 10
-                else:
-                    draw.text((10 - offset, y_offset), "Invalid event time", fill=TEXT_COLOR, font=Font1)
-                    y_offset += 50
+                event_text = f"{event_details[i][0]} {event_details[i][1]} \n {event_details[i][2]}"
+                draw.text((10 - offset, y_offset), event_text, fill=TEXT_COLOR, font=Font1)
+                y_offset += 50
 
             image1.paste(crt_filter, (0, 0), crt_filter)
             disp.ShowImage(image1, 0, 0)
-            time.sleep(0.01)
+            time.sleep(0.001)
 
 except IOError as e:
     if 'disp' in locals():
