@@ -88,7 +88,7 @@ try:
         time.sleep(10)
         
         # Swipe transition text off screen
-        for offset in range(0, disp_width + 1, 3):  # Increment by 3 pixels per frame
+        for offset in range(0, disp_width + 1, 10):  # Increment by 3 pixels per frame
             image1 = base_image.copy()  # Start with the base image
             draw = ImageDraw.Draw(image1)
 
@@ -98,7 +98,7 @@ try:
             draw.text((time_x - offset, 130), current_time, fill=TITLE_COLOR, font=FontLarge)
 
             disp.ShowImage(image1, 0, 0)
-            time.sleep(0.01)  # Adjust speed of animation
+            time.sleep(0.001)  # Adjust speed of animation
 
         # State 2: Display upcoming events
         text_bbox = FontLarge.getbbox("Upcoming Events")
@@ -139,8 +139,9 @@ try:
         time.sleep(10)
 
         # Swipe transition text off screen
-        y_offset = 100  # Reset y_offset before the loop
-        for offset in range(0, disp_width + 1, 3):
+        for offset in range(0, disp_width + 1, 10):
+            y_offset = 100
+
             image1 = base_image.copy()  # Start with the base image
             draw = ImageDraw.Draw(image1)
 
@@ -151,7 +152,7 @@ try:
                 y_offset += 50
 
             disp.ShowImage(image1, 0, 0)
-            time.sleep(0.01)
+            time.sleep(0.001)
 
 except IOError as e:
     if 'disp' in locals():
