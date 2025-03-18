@@ -98,7 +98,7 @@ try:
             draw.text((time_x - offset, 130), current_time, fill=TITLE_COLOR, font=FontLarge)
 
             disp.ShowImage(image1, 0, 0)
-            time.sleep(0.01)  # Adjust speed of animation
+            time.sleep(0.001)  # Adjust speed of animation
 
         # State 2: Display upcoming events
         text_bbox = FontLarge.getbbox("Upcoming Events")
@@ -122,9 +122,9 @@ try:
                 summary_bbox = FontLarge.getbbox(summary)
                 summary_text_width = summary_bbox[2] - summary_bbox[0]
                 #text is too large for screen width
-                if(summary_text_width > disp_width - 10):
+                if(summary_text_width > disp_width - 20):
                     #truncate text and add '...' after
-                    summary = summary[:int((disp_width - 20) / 10)] + "..."
+                    summary = summary[:int((disp_width - 30) / 15)] + "..."
                 
                 event_details[i][2] = summary
 
@@ -161,7 +161,6 @@ try:
                 y_offset += 50
 
             disp.ShowImage(image1, 0, 0)
-            time.sleep(0.01)
 
 except IOError as e:
     if 'disp' in locals():
