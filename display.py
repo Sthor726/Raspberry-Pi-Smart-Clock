@@ -152,6 +152,7 @@ try:
             draw.text((day_x + disp_width + 1 - offset, 100), day_of_week + ", " + today_date, fill=TITLE_COLOR, font=FontMedium)
             draw.text((time_x + disp_width + 1 - offset, 130), current_time, fill=TITLE_COLOR, font=FontLarge)
 
+            image1.paste(crt_filter, (0, 0), crt_filter)
             disp.ShowImage(image1, 0, 0)
             
             
@@ -162,6 +163,7 @@ try:
         draw.text((day_x, 100), day_of_week + ", " + today_date, fill=TITLE_COLOR, font=FontMedium)
         draw.text((time_x, 130), current_time, fill=TITLE_COLOR, font=FontLarge)
         
+        image1.paste(crt_filter, (0, 0), crt_filter)
         disp.ShowImage(image1, 0, 0)
         
         # get events while greeting page is open - save time in transitions
@@ -177,6 +179,7 @@ try:
             draw.text((day_x - offset, 100), day_of_week + ", " + today_date, fill=TITLE_COLOR, font=FontMedium)
             draw.text((time_x - offset, 130), current_time, fill=TITLE_COLOR, font=FontLarge)
 
+            image1.paste(crt_filter, (0, 0), crt_filter)
             disp.ShowImage(image1, 0, 0)
 
         # State 2: Display upcoming events
@@ -200,6 +203,7 @@ try:
             else:
                 draw.text((10 + disp_width + 1 - offset, 60), "No upcoming events.", fill=TEXT_COLOR, font=Font1)
             draw.text((text_x + disp_width + 1 - offset, 20), "Upcoming Events", fill=TITLE_COLOR, font=FontLarge)
+            image1.paste(crt_filter, (0, 0), crt_filter)
             disp.ShowImage(image1, 0, 0)
 
 
@@ -214,6 +218,7 @@ try:
         else:
             draw.text((10, 60), "No upcoming events.", fill=TEXT_COLOR, font=Font1)
         draw.text((text_x, 20), "Upcoming Events", fill=TITLE_COLOR, font=FontLarge)
+        image1.paste(crt_filter, (0, 0), crt_filter)
         disp.ShowImage(image1, 0, 0)
 
 
@@ -232,10 +237,8 @@ try:
                 draw.text((10 - offset, y_offset), event_text, fill=TEXT_COLOR, font=Font1)
                 y_offset += 50
 
+            image1.paste(crt_filter, (0, 0), crt_filter)
             disp.ShowImage(image1, 0, 0)
-
-
-        time.sleep(10)
         
         
         # State 3: Display weather forecast with swipe animations
@@ -292,14 +295,15 @@ try:
             draw.text((forecast_title_x + disp_width + 1 - offset, 20), "Today's Forecast", fill=TITLE_COLOR, font=FontLarge)
 
             # Move the high, low, and precipitation values
-            draw.text((10 + disp_width + 1 - offset, 80), f"Day: {high}F", fill=ORANGE, font=Font2)
-            draw.text((10 + disp_width + 1 - offset, 120), f"Night: {low}F", fill=BLUE, font=Font1)
-            draw.text((10 + disp_width + 1 - offset, 160), f"Precipitation: {precip}", fill=TEXT_COLOR, font=Font1)
+            draw.text((10 + disp_width + 1 - offset, 100), f"Day: {high}F", fill=ORANGE, font=Font2)
+            draw.text((10 + disp_width + 1 - offset, 140), f"Night: {low}F", fill=BLUE, font=Font1)
+            draw.text((10 + disp_width + 1 - offset, 180), f"Precipitation: {precip}", fill=TEXT_COLOR, font=Font1)
 
             # Move the weather icon
             image1.paste(weather_icon, (disp_width - 150 + disp_width + 1 - offset, 80), weather_icon)
 
             # Display the updated image
+            image1.paste(crt_filter, (0, 0), crt_filter)
             disp.ShowImage(image1, 0, 0)
 
         # Display the weather forecast in its final position
@@ -310,14 +314,15 @@ try:
         draw.text((forecast_title_x, 20), "Today's Forecast", fill=TITLE_COLOR, font=FontLarge)
 
         # Draw the high, low, and precipitation values
-        draw.text((10, 80), f"Day: {high}F", fill=ORANGE, font=Font2)
-        draw.text((10, 120), f"Night: {low}F", fill=BLUE, font=Font1)
-        draw.text((10, 160), f"Precipitation: {precip}", fill=TEXT_COLOR, font=Font1)
+        draw.text((10, 100), f"Day: {high}F", fill=ORANGE, font=Font2)
+        draw.text((10, 140), f"Night: {low}F", fill=BLUE, font=Font1)
+        draw.text((10, 180), f"Precipitation: {precip}", fill=TEXT_COLOR, font=Font1)
 
         # Draw the weather icon
         image1.paste(weather_icon, (disp_width - 150, 80), weather_icon)
 
         # Display the final image
+        image1.paste(crt_filter, (0, 0), crt_filter)
         disp.ShowImage(image1, 0, 0)
 
         time.sleep(10)
@@ -331,14 +336,15 @@ try:
             draw.text((forecast_title_x - offset, 20), "Today's Forecast", fill=TITLE_COLOR, font=FontLarge)
 
             # Move the high, low, and precipitation values
-            draw.text((10 - offset, 80), f"Day: {high}F", fill=ORANGE, font=Font2)
-            draw.text((10 - offset, 120), f"Night: {low}F", fill=BLUE, font=Font1)
-            draw.text((10 - offset, 160), f"Precipitation: {precip}", fill=TEXT_COLOR, font=Font1)
+            draw.text((10 - offset, 100), f"Day: {high}F", fill=ORANGE, font=Font2)
+            draw.text((10 - offset, 140), f"Night: {low}F", fill=BLUE, font=Font1)
+            draw.text((10 - offset, 180), f"Precipitation: {precip}", fill=TEXT_COLOR, font=Font1)
 
             # Move the weather icon
             image1.paste(weather_icon, (disp_width - 150 - offset, 80), weather_icon)
 
             # Display the updated image
+            image1.paste(crt_filter, (0, 0), crt_filter)
             disp.ShowImage(image1, 0, 0)
         
 except IOError as e:
