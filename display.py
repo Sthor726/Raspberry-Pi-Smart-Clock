@@ -241,9 +241,9 @@ try:
         forecast_title_width = forecast_title_bbox[2] - forecast_title_bbox[0]
         forecast_title_x = (disp_width - forecast_title_width) // 2 
 
-        high = forecast["high_temp"]
-        low = forecast["low_temp"]
-        precip = forecast["precip"]
+        high = forecast[0]["high_temp"]
+        low = forecast[0]["low_temp"]
+        precip = forecast[0]["precip"]
 
         # Display the forecast title
         draw.text((forecast_title_x, 20), "Today's Forecast", fill=TITLE_COLOR, font=FontLarge)
@@ -254,7 +254,7 @@ try:
         draw.text((10, 160), f"Precipitation: {precip}%", fill=TEXT_COLOR, font=Font1)
 
         # Handle weather icon based on the icon_code
-        icon_code = forecast["weather"]["icon"]
+        icon_code = forecast[0]["weather"]["icon"]
 
         if icon_code[0] == 't':
             # Thunderstorm
