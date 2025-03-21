@@ -25,8 +25,8 @@ WEATHER_API_KEY = '/home/sthor726/Raspberry-Pi-Smart-Clock/weather_key.json'
 BACKGROUND_COLOR = (166, 166, 154)  
 TITLE_COLOR = (140, 140, 140)  
 TEXT_COLOR = (20, 20, 20)
-ORANGE = (160, 40, 0)
-BLUE = (0, 40, 160)
+ORANGE = (160, 80, 0)
+BLUE = (0, 80, 160)
 
 
 def get_event_text(list_events):
@@ -60,6 +60,7 @@ def get_daily_forecast():
     key = json.load(open(WEATHER_API_KEY))["key"]
     url = f"https://api.weatherbit.io/v2.0/forecast/daily?city=Minneapolis,MN&units=I&days=1&key={key}"
     response = requests.get(url)
+    print("Weatherbit API accesed with status code: ", response.status_code)
     return response.json()["data"]
 
 # Function to load and convert an SVG to a Pillow image
@@ -87,7 +88,7 @@ try:
     crt_filter = crt_filter.resize((disp.height, disp.width))
 
     Font1 = ImageFont.truetype("/home/sthor726/Raspberry-Pi-Smart-Clock/fonts/sysfont.otf", 24)
-    Font2 = ImageFont.truetype("/home/sthor726/Raspberry-Pi-Smart-Clock/fonts/sysfont.otf", 28)
+    Font2 = ImageFont.truetype("/home/sthor726/Raspberry-Pi-Smart-Clock/fonts/sysfont.otf", 32)
     FontLarge = ImageFont.truetype("/home/sthor726/Raspberry-Pi-Smart-Clock/fonts/contm.ttf", 32)
     FontMedium = ImageFont.truetype("/home/sthor726/Raspberry-Pi-Smart-Clock/fonts/contm.ttf", 28)
 
@@ -291,12 +292,12 @@ try:
             draw.text((forecast_title_x + disp_width + 1 - offset, 20), "Today's Forecast", fill=TITLE_COLOR, font=FontLarge)
 
             # Move the high, low, and precipitation values
-            draw.text((10 + disp_width + 1 - offset, 80), f"Day: {high}F", fill=ORANGE, font=FontMedium)
+            draw.text((10 + disp_width + 1 - offset, 80), f"Day: {high}F", fill=ORANGE, font=Font2)
             draw.text((10 + disp_width + 1 - offset, 120), f"Night: {low}F", fill=BLUE, font=Font1)
-            draw.text((10 + disp_width + 1 - offset, 160), f"Precipitation: {precip}%", fill=TEXT_COLOR, font=Font1)
+            draw.text((10 + disp_width + 1 - offset, 160), f"Precipitation: {precip}", fill=TEXT_COLOR, font=Font1)
 
             # Move the weather icon
-            image1.paste(weather_icon, (disp_width - 200 + disp_width + 1 - offset, 80), weather_icon)
+            image1.paste(weather_icon, (disp_width - 150 + disp_width + 1 - offset, 80), weather_icon)
 
             # Display the updated image
             disp.ShowImage(image1, 0, 0)
@@ -311,10 +312,10 @@ try:
         # Draw the high, low, and precipitation values
         draw.text((10, 80), f"Day: {high}F", fill=ORANGE, font=Font2)
         draw.text((10, 120), f"Night: {low}F", fill=BLUE, font=Font1)
-        draw.text((10, 160), f"Precipitation: {precip}%", fill=TEXT_COLOR, font=Font1)
+        draw.text((10, 160), f"Precipitation: {precip}", fill=TEXT_COLOR, font=Font1)
 
         # Draw the weather icon
-        image1.paste(weather_icon, (disp_width - 200, 80), weather_icon)
+        image1.paste(weather_icon, (disp_width - 150, 80), weather_icon)
 
         # Display the final image
         disp.ShowImage(image1, 0, 0)
@@ -332,10 +333,10 @@ try:
             # Move the high, low, and precipitation values
             draw.text((10 - offset, 80), f"Day: {high}F", fill=ORANGE, font=Font2)
             draw.text((10 - offset, 120), f"Night: {low}F", fill=BLUE, font=Font1)
-            draw.text((10 - offset, 160), f"Precipitation: {precip}%", fill=TEXT_COLOR, font=Font1)
+            draw.text((10 - offset, 160), f"Precipitation: {precip}", fill=TEXT_COLOR, font=Font1)
 
             # Move the weather icon
-            image1.paste(weather_icon, (disp_width - 200 - offset, 80), weather_icon)
+            image1.paste(weather_icon, (disp_width - 150 - offset, 80), weather_icon)
 
             # Display the updated image
             disp.ShowImage(image1, 0, 0)
