@@ -73,6 +73,7 @@ def load_svg_as_image(svg_path):
 
 if __name__ == '__main__':
     forecast = get_daily_forecast()
+    greeting = ""
 
 try:
     disp = LCD_2inch.LCD_2inch()
@@ -104,7 +105,6 @@ try:
         
         day_of_week = now.strftime("%A")
         today_date = now.strftime("%B %d")
-        
         if current_hour < 12:
             if greeting == "Good Evening!":
                 getWeather = True;
