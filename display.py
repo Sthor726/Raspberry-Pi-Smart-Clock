@@ -87,6 +87,7 @@ try:
     crt_filter = crt_filter.resize((disp.height, disp.width))
 
     Font1 = ImageFont.truetype("/home/sthor726/Raspberry-Pi-Smart-Clock/fonts/sysfont.otf", 24)
+    Font2 = ImageFont.truetype("/home/sthor726/Raspberry-Pi-Smart-Clock/fonts/sysfont.otf", 28)
     FontLarge = ImageFont.truetype("/home/sthor726/Raspberry-Pi-Smart-Clock/fonts/contm.ttf", 32)
     FontMedium = ImageFont.truetype("/home/sthor726/Raspberry-Pi-Smart-Clock/fonts/contm.ttf", 28)
 
@@ -236,25 +237,21 @@ try:
         time.sleep(10)
         
         
-        # State 3: Display weather forecast
+        # State 3: Display weather forecast with swipe animations
         forecast_title_bbox = FontLarge.getbbox("Today's Forecast")
         forecast_title_width = forecast_title_bbox[2] - forecast_title_bbox[0]
         forecast_title_x = (disp_width - forecast_title_width) // 2 
 
-        high = forecast[0]["high_temp"]
-        low = forecast[0]["low_temp"]
-        precip = forecast[0]["precip"]
+        # Access the first day's forecast
+        today_forecast = forecast[0]
 
-        # Display the forecast title
-        draw.text((forecast_title_x, 20), "Today's Forecast", fill=TITLE_COLOR, font=FontLarge)
-
-        # Display the high, low, and precipitation values
-        draw.text((10, 80), f"Day: {high}°F", fill=ORANGE, font=FontMedium)
-        draw.text((10, 120), f"Night: {low}°F", fill=ORANGE, font=Font1)
-        draw.text((10, 160), f"Precipitation: {precip}%", fill=TEXT_COLOR, font=Font1)
+        # Extract weather details
+        high = today_forecast["high_temp"].replace(u'\N{DEGREE SIGN}', "")
+        low = today_forecast["low_temp"].replace(u'\N{DEGREE SIGN}', "")
+        precip = today_forecast["pop"]
 
         # Handle weather icon based on the icon_code
-        icon_code = forecast[0]["weather"]["icon"]
+        icon_code = today_forecast["weather"]["icon"]
 
         if icon_code[0] == 't':
             # Thunderstorm
@@ -281,12 +278,67 @@ try:
             # Unknown condition
             weather_icon_path = "/home/sthor726/Raspberry-Pi-Smart-Clock/images/weathericons/weather.svg"
 
+        # Load and resize the weather icon
         weather_icon = load_svg_as_image(weather_icon_path)
-        weather_icon = weather_icon.resize((50, 50))
-        image1.paste(weather_icon, (disp_width - 60, 80), weather_icon)
+        weather_icon = weather_icon.resize((100, 100))
+
+        # Swipe in the weather forecast from the right
+        for offset in range(0, disp_width + 1, 10):  # Increment by 10 pixels per frame
+            image1 = base_image.copy()  # Start with the base image
+            draw = ImageDraw.Draw(image1)
+
+            # Move the forecast title
+            draw.text((forecast_title_x + disp_width + 1 - offset, 20), "Today's Forecast", fill=TITLE_COLOR, font=FontLarge)
+
+            # Move the high, low, and precipitation values
+            draw.text((10 + disp_width + 1 - offset, 80), f"Day: {high}°F", fill=ORANGE, font=FontMedium)
+            draw.text((10 + disp_width + 1 - offset, 120), f"Night: {low}°F", fill=BLUE, font=Font1)
+            draw.text((10 + disp_width + 1 - offset, 160), f"Precipitation: {precip}%", fill=TEXT_COLOR, font=Font1)
+
+            # Move the weather icon
+            image1.paste(weather_icon, (disp_width - 200 + disp_width + 1 - offset, 80), weather_icon)
+
+            # Display the updated image
+            disp.ShowImage(image1, 0, 0)
+
+        # Display the weather forecast in its final position
+        image1 = base_image.copy()
+        draw = ImageDraw.Draw(image1)
+
+        # Draw the forecast title
+        draw.text((forecast_title_x, 20), "Today's Forecast", fill=TITLE_COLOR, font=FontLarge)
+
+        # Draw the high, low, and precipitation values
+        draw.text((10, 80), f"Day: {high}°F", fill=ORANGE, font=Font2)
+        draw.text((10, 120), f"Night: {low}°F", fill=BLUE, font=Font1)
+        draw.text((10, 160), f"Precipitation: {precip}%", fill=TEXT_COLOR, font=Font1)
+
+        # Draw the weather icon
+        image1.paste(weather_icon, (disp_width - 200, 80), weather_icon)
+
+        # Display the final image
         disp.ShowImage(image1, 0, 0)
-        
+
         time.sleep(10)
+
+        # Swipe out the weather forecast to the left
+        for offset in range(0, disp_width + 1, 10):  # Increment by 10 pixels per frame
+            image1 = base_image.copy()  # Start with the base image
+            draw = ImageDraw.Draw(image1)
+
+            # Move the forecast title
+            draw.text((forecast_title_x - offset, 20), "Today's Forecast", fill=TITLE_COLOR, font=FontLarge)
+
+            # Move the high, low, and precipitation values
+            draw.text((10 - offset, 80), f"Day: {high}°F", fill=ORANGE, font=Font2)
+            draw.text((10 - offset, 120), f"Night: {low}°F", fill=BLUE, font=Font1)
+            draw.text((10 - offset, 160), f"Precipitation: {precip}%", fill=TEXT_COLOR, font=Font1)
+
+            # Move the weather icon
+            image1.paste(weather_icon, (disp_width - 200 - offset, 80), weather_icon)
+
+            # Display the updated image
+            disp.ShowImage(image1, 0, 0)
         
 except IOError as e:
     if 'disp' in locals():
