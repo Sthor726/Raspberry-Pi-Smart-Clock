@@ -71,6 +71,9 @@ def load_svg_as_image(svg_path):
     image = Image.open(io.BytesIO(png_data))
     return image
 
+if __name__ == '__main__':
+    forecast = get_daily_forecast()
+
 try:
     disp = LCD_2inch.LCD_2inch()
     disp.Init()
@@ -92,7 +95,7 @@ try:
     base_image = background.copy()
     base_image.paste(crt_filter, (0, 0), crt_filter)
     
-    forecast = "".json() 
+    getWeather = False
     while True:
         # State 1: Display greeting and date / time
         now = datetime.now()
@@ -104,16 +107,21 @@ try:
         
         if current_hour < 12:
             if greeting == "Good Evening!":
-                forecast = get_daily_forecast()
+                getWeather = True;
             greeting = "Good Morning!"
         elif current_hour < 18:
             if greeting == "Good Morning!":
-                forecast = get_daily_forecast()
+                getWeather = True;
             greeting = "Good Afternoon!"
         else:
             if greeting == "Good Afternoon!":
-                forecast = get_daily_forecast()
+                getWeather = True;
             greeting = "Good Evening!"
+            
+        if(getWeather):
+            forecast = get_daily_forecast()
+            getWeather = False
+        
         
 
         disp_width, disp_height = disp.height, disp.width  # LCD is rotated, so height is width
@@ -279,7 +287,6 @@ try:
         disp.ShowImage(image1, 0, 0)
         
         time.sleep(10)
-        disp.clear()
         
 except IOError as e:
     if 'disp' in locals():
@@ -291,4 +298,3 @@ except KeyboardInterrupt:
         disp.module.exit()
     logging.info("quit: ")
     exit()
-
