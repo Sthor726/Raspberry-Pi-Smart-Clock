@@ -25,8 +25,8 @@ WEATHER_API_KEY = '/home/sthor726/Raspberry-Pi-Smart-Clock/weather_key.json'
 BACKGROUND_COLOR = (166, 166, 154)  
 TITLE_COLOR = (140, 140, 140)  
 TEXT_COLOR = (20, 20, 20)
-ORANGE = (80, 20, 0)
-BLUE = (0, 20, 80)
+ORANGE = (160, 40, 0)
+BLUE = (0, 40, 160)
 
 
 def get_event_text(list_events):
@@ -246,8 +246,8 @@ try:
         today_forecast = forecast[0]
 
         # Extract weather details
-        high = today_forecast["high_temp"].replace(u'\N{DEGREE SIGN}', "")
-        low = today_forecast["low_temp"].replace(u'\N{DEGREE SIGN}', "")
+        high = today_forecast["high_temp"]
+        low = today_forecast["low_temp"]
         precip = today_forecast["pop"]
 
         # Handle weather icon based on the icon_code
@@ -291,8 +291,8 @@ try:
             draw.text((forecast_title_x + disp_width + 1 - offset, 20), "Today's Forecast", fill=TITLE_COLOR, font=FontLarge)
 
             # Move the high, low, and precipitation values
-            draw.text((10 + disp_width + 1 - offset, 80), f"Day: {high}°F", fill=ORANGE, font=FontMedium)
-            draw.text((10 + disp_width + 1 - offset, 120), f"Night: {low}°F", fill=BLUE, font=Font1)
+            draw.text((10 + disp_width + 1 - offset, 80), f"Day: {high}F", fill=ORANGE, font=FontMedium)
+            draw.text((10 + disp_width + 1 - offset, 120), f"Night: {low}F", fill=BLUE, font=Font1)
             draw.text((10 + disp_width + 1 - offset, 160), f"Precipitation: {precip}%", fill=TEXT_COLOR, font=Font1)
 
             # Move the weather icon
@@ -309,8 +309,8 @@ try:
         draw.text((forecast_title_x, 20), "Today's Forecast", fill=TITLE_COLOR, font=FontLarge)
 
         # Draw the high, low, and precipitation values
-        draw.text((10, 80), f"Day: {high}°F", fill=ORANGE, font=Font2)
-        draw.text((10, 120), f"Night: {low}°F", fill=BLUE, font=Font1)
+        draw.text((10, 80), f"Day: {high}F", fill=ORANGE, font=Font2)
+        draw.text((10, 120), f"Night: {low}F", fill=BLUE, font=Font1)
         draw.text((10, 160), f"Precipitation: {precip}%", fill=TEXT_COLOR, font=Font1)
 
         # Draw the weather icon
@@ -330,8 +330,8 @@ try:
             draw.text((forecast_title_x - offset, 20), "Today's Forecast", fill=TITLE_COLOR, font=FontLarge)
 
             # Move the high, low, and precipitation values
-            draw.text((10 - offset, 80), f"Day: {high}°F", fill=ORANGE, font=Font2)
-            draw.text((10 - offset, 120), f"Night: {low}°F", fill=BLUE, font=Font1)
+            draw.text((10 - offset, 80), f"Day: {high}F", fill=ORANGE, font=Font2)
+            draw.text((10 - offset, 120), f"Night: {low}F", fill=BLUE, font=Font1)
             draw.text((10 - offset, 160), f"Precipitation: {precip}%", fill=TEXT_COLOR, font=Font1)
 
             # Move the weather icon
