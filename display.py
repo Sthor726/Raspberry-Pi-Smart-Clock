@@ -8,7 +8,11 @@ import spidev as SPI
 from PIL import Image, ImageDraw, ImageFont
 from lib import LCD_2inch
 import clock
+import requests
+import json
 from datetime import datetime, timedelta
+import io
+from cairosvg import svg2png
 
 RST = 27
 DC = 25
@@ -17,9 +21,12 @@ bus = 0
 device = 0
 logging.basicConfig(level=logging.DEBUG)
 
+WEATHER_API_KEY = '/home/sthor726/Raspberry-Pi-Smart-Clock/weather_key.json'
 BACKGROUND_COLOR = (166, 166, 154)  
 TITLE_COLOR = (140, 140, 140)  
 TEXT_COLOR = (20, 20, 20)
+ORANGE = (80, 20, 0)
+BLUE = (0, 20, 80)
 
 
 def get_event_text(list_events):
@@ -49,27 +56,43 @@ def get_event_text(list_events):
                 event_details[i][1] = "Time"
     return event_details
 
+def get_daily_forecast():
+    key = json.load(open(WEATHER_API_KEY))["key"]
+    url = f"https://api.weatherbit.io/v2.0/forecast/daily?city=Minneapolis,MN&units=I&days=1&key={key}"
+    response = requests.get(url)
+    return response.json()["data"]
+
+# Function to load and convert an SVG to a Pillow image
+def load_svg_as_image(svg_path):
+    # Convert SVG to PNG in memory
+    png_data = svg2png(url=svg_path)
+    
+    # Load the PNG data into a Pillow image
+    image = Image.open(io.BytesIO(png_data))
+    return image
+
 try:
     disp = LCD_2inch.LCD_2inch()
     disp.Init()
     disp.clear()
 
-    background = Image.open("/home/sthor726/Raspberry-Pi-Smart-Clock/wii-menu.png").convert("RGB")
+    background = Image.open("/home/sthor726/Raspberry-Pi-Smart-Clock/images/wii-menu.png").convert("RGB")
     background = background.resize((disp.height, disp.width))
     
-    crt_filter = Image.open("/home/sthor726/Raspberry-Pi-Smart-Clock/filter.png").convert("RGBA")
+    crt_filter = Image.open("/home/sthor726/Raspberry-Pi-Smart-Clock/images/filter.png").convert("RGBA")
     crt_filter = crt_filter.resize((disp.height, disp.width))
 
-    Font1 = ImageFont.truetype("/home/sthor726/Raspberry-Pi-Smart-Clock/Font/sysfont.otf", 24)
-    FontLarge = ImageFont.truetype("/home/sthor726/Raspberry-Pi-Smart-Clock/Font/contm.ttf", 32)
-    FontMedium = ImageFont.truetype("/home/sthor726/Raspberry-Pi-Smart-Clock/Font/contm.ttf", 28)
+    Font1 = ImageFont.truetype("/home/sthor726/Raspberry-Pi-Smart-Clock/fonts/sysfont.otf", 24)
+    FontLarge = ImageFont.truetype("/home/sthor726/Raspberry-Pi-Smart-Clock/fonts/contm.ttf", 32)
+    FontMedium = ImageFont.truetype("/home/sthor726/Raspberry-Pi-Smart-Clock/fonts/contm.ttf", 28)
 
     disp.clear()  # Clear the screen once during initialization
 
     # Create a base image with the background and CRT filter
     base_image = background.copy()
     base_image.paste(crt_filter, (0, 0), crt_filter)
-
+    
+    forecast = "".json() 
     while True:
         # State 1: Display greeting and date / time
         now = datetime.now()
@@ -80,10 +103,16 @@ try:
         today_date = now.strftime("%B %d")
         
         if current_hour < 12:
+            if greeting == "Good Evening!":
+                forecast = get_daily_forecast()
             greeting = "Good Morning!"
         elif current_hour < 18:
+            if greeting == "Good Morning!":
+                forecast = get_daily_forecast()
             greeting = "Good Afternoon!"
         else:
+            if greeting == "Good Afternoon!":
+                forecast = get_daily_forecast()
             greeting = "Good Evening!"
         
 
@@ -195,6 +224,63 @@ try:
 
             disp.ShowImage(image1, 0, 0)
 
+
+        time.sleep(10)
+        
+        
+        # State 3: Display weather forecast
+        forecast_title_bbox = FontLarge.getbbox("Today's Forecast")
+        forecast_title_width = forecast_title_bbox[2] - forecast_title_bbox[0]
+        forecast_title_x = (disp_width - forecast_title_width) // 2 
+
+        high = forecast["high_temp"]
+        low = forecast["low_temp"]
+        precip = forecast["precip"]
+
+        # Display the forecast title
+        draw.text((forecast_title_x, 20), "Today's Forecast", fill=TITLE_COLOR, font=FontLarge)
+
+        # Display the high, low, and precipitation values
+        draw.text((10, 80), f"Day: {high}°F", fill=ORANGE, font=FontMedium)
+        draw.text((10, 120), f"Night: {low}°F", fill=ORANGE, font=Font1)
+        draw.text((10, 160), f"Precipitation: {precip}%", fill=TEXT_COLOR, font=Font1)
+
+        # Handle weather icon based on the icon_code
+        icon_code = forecast["weather"]["icon"]
+
+        if icon_code[0] == 't':
+            # Thunderstorm
+            weather_icon_path = "/home/sthor726/Raspberry-Pi-Smart-Clock/images/weathericons/thunder.svg"
+        elif icon_code[0] in ['d', 'r']:
+            # Rain
+            weather_icon_path = "/home/sthor726/Raspberry-Pi-Smart-Clock/images/weathericons/rainy-6.svg"
+        elif icon_code[0] == 's':
+            # Snow
+            weather_icon_path = "/home/sthor726/Raspberry-Pi-Smart-Clock/images/weathericons/snowy-6.svg"
+        elif icon_code[0] == 'a':
+            # Haze
+            weather_icon_path = "/home/sthor726/Raspberry-Pi-Smart-Clock/images/weathericons/haze.svg"
+        elif icon_code[:3] == 'c01':
+            # Clear
+            weather_icon_path = "/home/sthor726/Raspberry-Pi-Smart-Clock/images/weathericons/day.svg"
+        elif icon_code[:3] in ['c02', 'c03']:
+            # Partly Cloudy
+            weather_icon_path = "/home/sthor726/Raspberry-Pi-Smart-Clock/images/weathericons/cloudy-day-2.svg"
+        elif icon_code[:3] == 'c04':
+            # Cloudy
+            weather_icon_path = "/home/sthor726/Raspberry-Pi-Smart-Clock/images/weathericons/cloudy.svg"
+        else:
+            # Unknown condition
+            weather_icon_path = "/home/sthor726/Raspberry-Pi-Smart-Clock/images/weathericons/weather.svg"
+
+        weather_icon = load_svg_as_image(weather_icon_path)
+        weather_icon = weather_icon.resize((50, 50))
+        image1.paste(weather_icon, (disp_width - 60, 80), weather_icon)
+        disp.ShowImage(image1, 0, 0)
+        
+        time.sleep(10)
+        disp.clear()
+        
 except IOError as e:
     if 'disp' in locals():
         disp.clear()
