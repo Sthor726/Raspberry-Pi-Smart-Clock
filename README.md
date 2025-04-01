@@ -12,7 +12,7 @@ with the Google Calendar API and retrieve event data.
 - **Weather Integration**: This application uses the WeatherBit API to display the current day's forecast.
 - **Display Library**: The project uses the Waveshare LCD_2inch library to interface with the 2-inch display.
 The PIL (Pillow) library is used to create and manage the images displayed on the screen.
-- **Casing**: The Raspberry Pi and LCD screen are housed in a 3d printed case, meant to resemble an old-fashioned TV.
+- **Casing**: The project uses a custom casing I 3D modeled for the Raspberry Pi and LCD screen using Blender.
 ## Project Images:
 
 <p float="left">
