@@ -72,6 +72,32 @@ def load_svg_as_image(svg_path):
     image = Image.open(io.BytesIO(png_data))
     return image
 
+def icon_to_path(icon_code):
+    if icon_code[0] == 't':
+            # Thunderstorm
+            return "/home/sthor726/Raspberry-Pi-Smart-Clock/images/weathericons/thunder.svg"
+        elif icon_code[0] in ['d', 'r']:
+            # Rain
+            return "/home/sthor726/Raspberry-Pi-Smart-Clock/images/weathericons/rainy-6.svg"
+        elif icon_code[0] == 's':
+            # Snow
+            return "/home/sthor726/Raspberry-Pi-Smart-Clock/images/weathericons/snowy-6.svg"
+        elif icon_code[0] == 'a':
+            # Haze
+            return "/home/sthor726/Raspberry-Pi-Smart-Clock/images/weathericons/haze.svg"
+        elif icon_code[:3] == 'c01':
+            # Clear
+            return "/home/sthor726/Raspberry-Pi-Smart-Clock/images/weathericons/day.svg"
+        elif icon_code[:3] in ['c02', 'c03']:
+            # Partly Cloudy
+            return "/home/sthor726/Raspberry-Pi-Smart-Clock/images/weathericons/cloudy-day-2.svg"
+        elif icon_code[:3] == 'c04':
+            # Cloudy
+            return "/home/sthor726/Raspberry-Pi-Smart-Clock/images/weathericons/cloudy.svg"
+        else:
+            # Unknown condition
+            return "/home/sthor726/Raspberry-Pi-Smart-Clock/images/weathericons/weather.svg"
+
 if __name__ == '__main__':
     forecast = get_daily_forecast()
     greeting = ""
@@ -257,31 +283,8 @@ try:
         # Handle weather icon based on the icon_code
         icon_code = today_forecast["weather"]["icon"]
 
-        if icon_code[0] == 't':
-            # Thunderstorm
-            weather_icon_path = "/home/sthor726/Raspberry-Pi-Smart-Clock/images/weathericons/thunder.svg"
-        elif icon_code[0] in ['d', 'r']:
-            # Rain
-            weather_icon_path = "/home/sthor726/Raspberry-Pi-Smart-Clock/images/weathericons/rainy-6.svg"
-        elif icon_code[0] == 's':
-            # Snow
-            weather_icon_path = "/home/sthor726/Raspberry-Pi-Smart-Clock/images/weathericons/snowy-6.svg"
-        elif icon_code[0] == 'a':
-            # Haze
-            weather_icon_path = "/home/sthor726/Raspberry-Pi-Smart-Clock/images/weathericons/haze.svg"
-        elif icon_code[:3] == 'c01':
-            # Clear
-            weather_icon_path = "/home/sthor726/Raspberry-Pi-Smart-Clock/images/weathericons/day.svg"
-        elif icon_code[:3] in ['c02', 'c03']:
-            # Partly Cloudy
-            weather_icon_path = "/home/sthor726/Raspberry-Pi-Smart-Clock/images/weathericons/cloudy-day-2.svg"
-        elif icon_code[:3] == 'c04':
-            # Cloudy
-            weather_icon_path = "/home/sthor726/Raspberry-Pi-Smart-Clock/images/weathericons/cloudy.svg"
-        else:
-            # Unknown condition
-            weather_icon_path = "/home/sthor726/Raspberry-Pi-Smart-Clock/images/weathericons/weather.svg"
-
+        weather_icon_path = icon_to_path(icon_code)
+        
         # Load and resize the weather icon
         weather_icon = load_svg_as_image(weather_icon_path)
         weather_icon = weather_icon.resize((100, 100))
@@ -291,59 +294,45 @@ try:
             image1 = base_image.copy()  # Start with the base image
             draw = ImageDraw.Draw(image1)
 
-            # Move the forecast title
             draw.text((forecast_title_x + disp_width + 1 - offset, 20), "Today's Forecast", fill=TITLE_COLOR, font=FontLarge)
 
-            # Move the high, low, and precipitation values
             draw.text((10 + disp_width + 1 - offset, 100), f"Day: {high}F", fill=ORANGE, font=Font2)
             draw.text((10 + disp_width + 1 - offset, 140), f"Night: {low}F", fill=BLUE, font=Font1)
             draw.text((10 + disp_width + 1 - offset, 180), f"Precipitation: {precip}", fill=TEXT_COLOR, font=Font1)
 
-            # Move the weather icon
             image1.paste(weather_icon, (disp_width - 150 + disp_width + 1 - offset, 80), weather_icon)
 
-            # Display the updated image
             image1.paste(crt_filter, (0, 0), crt_filter)
             disp.ShowImage(image1, 0, 0)
 
-        # Display the weather forecast in its final position
         image1 = base_image.copy()
         draw = ImageDraw.Draw(image1)
 
-        # Draw the forecast title
         draw.text((forecast_title_x, 20), "Today's Forecast", fill=TITLE_COLOR, font=FontLarge)
 
-        # Draw the high, low, and precipitation values
         draw.text((10, 100), f"Day: {high}F", fill=ORANGE, font=Font2)
         draw.text((10, 140), f"Night: {low}F", fill=BLUE, font=Font1)
         draw.text((10, 180), f"Precipitation: {precip}", fill=TEXT_COLOR, font=Font1)
 
-        # Draw the weather icon
         image1.paste(weather_icon, (disp_width - 150, 80), weather_icon)
 
-        # Display the final image
         image1.paste(crt_filter, (0, 0), crt_filter)
         disp.ShowImage(image1, 0, 0)
 
         time.sleep(10)
 
-        # Swipe out the weather forecast to the left
         for offset in range(0, disp_width + 1, 10):  # Increment by 10 pixels per frame
             image1 = base_image.copy()  # Start with the base image
             draw = ImageDraw.Draw(image1)
 
-            # Move the forecast title
             draw.text((forecast_title_x - offset, 20), "Today's Forecast", fill=TITLE_COLOR, font=FontLarge)
 
-            # Move the high, low, and precipitation values
             draw.text((10 - offset, 100), f"Day: {high}F", fill=ORANGE, font=Font2)
             draw.text((10 - offset, 140), f"Night: {low}F", fill=BLUE, font=Font1)
             draw.text((10 - offset, 180), f"Precipitation: {precip}", fill=TEXT_COLOR, font=Font1)
 
-            # Move the weather icon
             image1.paste(weather_icon, (disp_width - 150 - offset, 80), weather_icon)
 
-            # Display the updated image
             image1.paste(crt_filter, (0, 0), crt_filter)
             disp.ShowImage(image1, 0, 0)
         
