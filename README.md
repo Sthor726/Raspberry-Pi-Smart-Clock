@@ -37,6 +37,5 @@ python3 /home/<username>/Raspberry-Pi-Smart-Clock/display.py &
 </br>
 
 
-##### .json files have been removed to hide API keys
 
 
